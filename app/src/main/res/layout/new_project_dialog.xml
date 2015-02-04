@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/fbutton_color_clouds"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="Create a new project tab"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:paddingLeft="10dp"
+        android:id="@+id/textView"
+        android:gravity="left|fill_vertical"
+        android:background="@color/fbutton_color_midnight_blue"/>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_height="match_parent">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Project Tab Name"
+        android:text="Man, another project eh?"
+        android:textCursorDrawable="@drawable/text_cursor"
+        app:baseColor="@color/fbutton_color_silver"
+        app:floatingLabel="highlight"
+        android:id="@+id/ProjectEntry" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingLeft="4.0dip"
+        android:paddingTop="5.0dip"
+        android:paddingRight="4.0dip"
+        android:paddingBottom="1.0dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TextView01">
+
+        <info.hoang8f.widget.FButton
+            fbutton:buttonColor="@color/fbutton_color_blush"
+            fbutton:shadowColor="@color/fbutton_color_midnight_blue"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="2dp"
+            fbutton:cornerRadius="5dp"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.85"
+            android:text="Cancel"
+            android:textSize="16dp"
+            android:id="@+id/view2"
+            android:clickable="true"
+            android:onClick="done"/>
+
+        <Button
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.1"
+            android:visibility="invisible" />
+
+        <info.hoang8f.widget.FButton
+            fbutton:buttonColor="@color/fbutton_color_mint"
+            fbutton:shadowColor="@color/fbutton_color_midnight_blue"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="2dp"
+            fbutton:cornerRadius="5dp"
+            android:text="Done"
+            android:textSize="16dp"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.85"
+            android:id="@+id/view"
+            android:clickable="true"
+            android:onClick="cancel"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

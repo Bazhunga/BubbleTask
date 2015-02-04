@@ -1,5 +1,7 @@
 package com.bouncythings.bubbletask;
 
+import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,12 +11,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
 
 public class HomeList extends ActionBarActivity {
 
+    Context ctxt = this;
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
@@ -87,8 +92,7 @@ public class HomeList extends ActionBarActivity {
      * sequence.
      */
     private class TaskListPagerAdapter extends FragmentStatePagerAdapter {
-        private final String[] TITLES = {"Categories", "Home", "Top Paid", "Top Free", "Top Grossing", "Top New Paid",
-                "Top New Free", "Trending"};
+        private final String[] TITLES = {"School", "IBM", "Hackathons", "Android"};
 
         public TaskListPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -108,5 +112,31 @@ public class HomeList extends ActionBarActivity {
         public int getCount() {
             return TITLES.length;
         }
+    }
+
+    public void newTask(View view){
+        CharSequence msg = "Creating New Task";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(ctxt, msg, duration);
+        toast.show();
+        DialogFragment dialog = new NewProjectDialog();
+        dialog.show(getFragmentManager(), "NewProjectDialog");
+    }
+    public void newProject(View view){
+        CharSequence msg = "Creating New Project";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(ctxt, msg, duration);
+        toast.show();
+        DialogFragment dialog = new NewProjectDialog();
+        dialog.show(getFragmentManager(), "NewProjectDialog");
+
+    }
+
+    public void cancel(View view){
+
+    }
+
+    public void done (View view){
+
     }
 }

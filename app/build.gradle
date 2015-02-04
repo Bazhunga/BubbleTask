@@ -22,6 +22,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.rengwuxian.materialedittext:library:1.8.2'
     compile 'com.jpardogo.materialtabstrip:library:1.0.8'
     compile 'com.getbase:floatingactionbutton:1.7.0'
+    compile 'info.hoang8f:fbutton:1.0.5'
 }

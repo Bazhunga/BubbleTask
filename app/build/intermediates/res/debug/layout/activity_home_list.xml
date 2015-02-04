@@ -37,16 +37,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/orange"
-            fab:fab_size="mini"
             fab:fab_title="New Project"
-            fab:fab_colorPressed="@color/orange_pressed"/>
+            fab:fab_colorPressed="@color/orange_pressed"
+            android:clickable="true"
+            android:id="@+id/NewProject"
+            android:onClick="newProject"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/pink"
             fab:fab_title="New Task"
-            fab:fab_colorPressed="@color/pink_pressed"/>
+            fab:fab_colorPressed="@color/pink_pressed"
+            android:clickable="true"
+            android:id="@+id/NewTask"
+            android:onClick="newTask"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
