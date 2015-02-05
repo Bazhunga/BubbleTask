@@ -9,10 +9,12 @@
     <color name="pink_pressed">#ec407a</color>
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
+    <color name="translucent_blue">#800043E0</color>
     <color name="orange">#F59733</color>
     <color name="orange_pressed">#DB882E</color>
     <color name="matte_blue">#6699FF</color>
     <color name="black">#000000</color>
+    <color name="ash">#878787</color>
     <color name="fbutton_color_turquoise">#1abc9c</color>
     <color name="fbutton_color_green_sea">#16a085</color>
     <color name="fbutton_color_emerald">#2ecc71</color>

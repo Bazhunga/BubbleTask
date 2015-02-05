@@ -22,6 +22,8 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.jpardogo.materialtabstrip:library:1.0.8:9:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.getbase:floatingactionbutton:1.7.0:12:5
+MERGED from com.github.navasmdc:MaterialDesign:1.0:11:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
 		ADDED from AndroidManifest.xml:8:9
 	android:allowBackup
@@ -57,6 +59,8 @@ MERGED from com.jpardogo.materialtabstrip:library:1.0.8:5:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
 MERGED from com.getbase:floatingactionbutton:1.7.0:8:5
 MERGED from info.hoang8f:fbutton:1.0.5:7:5
+MERGED from com.github.navasmdc:MaterialDesign:1.0:7:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0

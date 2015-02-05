@@ -39,6 +39,7 @@
             fab:fab_colorNormal="@color/orange"
             fab:fab_title="New Project"
             fab:fab_colorPressed="@color/orange_pressed"
+            fab:fab_icon="@drawable/p"
             android:clickable="true"
             android:id="@+id/NewProject"
             android:onClick="newProject"/>
@@ -49,6 +50,8 @@
             fab:fab_colorNormal="@color/pink"
             fab:fab_title="New Task"
             fab:fab_colorPressed="@color/pink_pressed"
+            fab:fab_icon="@drawable/t"
+            android:text="T"
             android:clickable="true"
             android:id="@+id/NewTask"
             android:onClick="newTask"/>

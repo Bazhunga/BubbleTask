@@ -20,6 +20,7 @@
     <color name="accent_material_light">@color/material_deep_teal_500</color>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/colors.xml -->
     <eat-comment/>
+    <color name="ash">#878787</color>
     <color name="background">#e5e5e5</color>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
@@ -83,6 +84,9 @@
     <eat-comment/>
     <color name="fbutton_default_color">#3eadeb</color>
     <color name="fbutton_default_shadow_color">#ff3493c8</color>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.github.navasmdc/MaterialDesign/1.0/res/values/values.xml -->
+    <eat-comment/>
+    <color name="green">#00FF00</color>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="half_black">#808080</color>
@@ -124,8 +128,12 @@
     <color name="secondary_text_disabled_material_light">#24000000</color>
     <color name="switch_thumb_normal_material_dark">#ffbdbdbd</color>
     <color name="switch_thumb_normal_material_light">#fff1f1f1</color>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.github.navasmdc/MaterialDesign/1.0/res/values/values.xml -->
+    <eat-comment/>
+    <color name="thumbColor">#66aaaaaa</color>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/colors.xml -->
     <eat-comment/>
+    <color name="translucent_blue">#800043E0</color>
     <color name="white">#fafafa</color>
     <color name="white_pressed">#f1f1f1</color>
     <declare-styleable name="ActionBar"><attr name="navigationMode"><enum name="normal" value="0"/><enum name="listMode" value="1"/><enum name="tabMode" value="2"/></attr><attr name="displayOptions"><flag name="none" value="0"/><flag name="useLogo" value="0x1"/><flag name="showHome" value="0x2"/><flag name="homeAsUp" value="0x4"/><flag name="showTitle" value="0x8"/><flag name="showCustom" value="0x10"/><flag name="disableHome" value="0x20"/></attr><attr name="title"/><attr format="string" name="subtitle"/><attr format="reference" name="titleTextStyle"/><attr format="reference" name="subtitleTextStyle"/><attr format="reference" name="icon"/><attr format="reference" name="logo"/><attr format="reference" name="divider"/><attr format="reference" name="background"/><attr format="reference|color" name="backgroundStacked"/><attr format="reference|color" name="backgroundSplit"/><attr format="reference" name="customNavigationLayout"/><attr name="height"/><attr format="reference" name="homeLayout"/><attr format="reference" name="progressBarStyle"/><attr format="reference" name="indeterminateProgressStyle"/><attr format="dimension" name="progressBarPadding"/><attr name="homeAsUpIndicator"/><attr format="dimension" name="itemPadding"/><attr format="boolean" name="hideOnContentScroll"/><attr format="dimension" name="contentInsetStart"/><attr format="dimension" name="contentInsetEnd"/><attr format="dimension" name="contentInsetLeft"/><attr format="dimension" name="contentInsetRight"/><attr format="dimension" name="elevation"/><attr format="reference" name="popupTheme"/></declare-styleable>
@@ -136,6 +144,7 @@
     <declare-styleable name="ActivityChooserView"><attr format="string" name="initialActivityCount"/><attr format="reference" name="expandActivityOverflowButtonDrawable"/></declare-styleable>
     <declare-styleable name="AddFloatingActionButton"><attr format="color" name="fab_plusIconColor"/></declare-styleable>
     <declare-styleable name="CompatTextView"><attr format="reference|boolean" name="textAllCaps"/></declare-styleable>
+    <declare-styleable name="CustomAttributes"><attr format="color|reference" name="rippleColor"/><attr format="float" name="rippleSpeed"/><attr format="boolean" name="showNumberIndicator"/><attr format="integer" name="max"/><attr format="integer" name="min"/><attr format="integer" name="value"/><attr format="integer" name="progress"/><attr format="dimension" name="ringWidth"/><attr format="boolean" name="checked"/><attr format="dimension" name="checkBoxSize"/><attr format="dimension" name="thumbSize"/><attr format="integer" name="iconDrawable"/><attr format="dimension" name="iconSize"/><attr format="boolean" name="animate"/><attr format="float" name="rippleBorderRadius"/><attr format="boolean" name="clickAfterRipple"/></declare-styleable>
     <declare-styleable name="DrawerArrowToggle"><attr format="color" name="color"/><attr format="boolean" name="spinBars"/><attr format="dimension" name="drawableSize"/><attr format="dimension" name="gapBetweenBars"/><attr format="dimension" name="topBottomBarArrowSize"/><attr format="dimension" name="middleBarArrowSize"/><attr format="dimension" name="barSize"/><attr format="dimension" name="thickness"/></declare-styleable>
     <declare-styleable name="FButton"><attr format="boolean" name="shadowEnabled"/><attr format="color" name="buttonColor"/><attr format="color" name="shadowColor"/><attr format="dimension" name="shadowHeight"/><attr format="dimension" name="cornerRadius"/></declare-styleable>
     <declare-styleable name="FloatingActionButton"><attr format="color" name="fab_colorPressed"/><attr format="color" name="fab_colorDisabled"/><attr format="color" name="fab_colorNormal"/><attr format="reference" name="fab_icon"/><attr format="enum" name="fab_size"><enum name="normal" value="0"/><enum name="mini" value="1"/></attr><attr format="string" name="fab_title"/><attr format="boolean" name="fab_stroke_visible"/></declare-styleable>
@@ -285,6 +294,8 @@
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
         <!-- Customize your theme here. -->
     </style>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
@@ -1166,6 +1177,16 @@
         <item name="android:listChoiceIndicatorMultiple">@drawable/abc_btn_check_material</item>
     </style>
     <style name="Platform.AppCompat.Light.Dialog" parent="Platform.AppCompat.Dialog"/>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <eat-comment/>
     <style name="RtlOverlay.Widget.AppCompat.ActionBar.TitleItem" parent="android:Widget">
         <item name="android:layout_gravity">center_vertical|left</item>
         <item name="android:paddingRight">8dp</item>

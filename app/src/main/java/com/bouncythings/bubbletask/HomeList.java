@@ -119,8 +119,8 @@ public class HomeList extends ActionBarActivity {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctxt, msg, duration);
         toast.show();
-        DialogFragment dialog = new NewProjectDialog();
-        dialog.show(getFragmentManager(), "NewProjectDialog");
+        DialogFragment dialog = new NewTaskDialog();
+        dialog.show(getFragmentManager(), "NewTaskDialog");
     }
     public void newProject(View view){
         CharSequence msg = "Creating New Project";
