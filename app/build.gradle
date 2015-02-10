@@ -27,4 +27,5 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.7.0'
     compile 'info.hoang8f:fbutton:1.0.5'
     compile 'com.github.navasmdc:MaterialDesign:1.0+'
+    compile 'com.google.code.gson:gson:2.3.1'
 }

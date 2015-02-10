@@ -38,12 +38,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Project Tab Name"
-        android:text="Man, another project eh?"
         android:textCursorDrawable="@drawable/text_cursor"
-        app:baseColor="@color/fbutton_color_silver"
+        app:baseColor="@color/black"
         app:floatingLabel="highlight"
         app:hideUnderline="true"
-        android:id="@+id/ProjectEntry" />
+        android:id="@+id/project_edit_text" />
 
     <!--<LinearLayout-->
         <!--android:orientation="horizontal"-->

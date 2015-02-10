@@ -2,7 +2,9 @@ package com.bouncythings.bubbletask;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -16,8 +18,16 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 
 public class HomeList extends ActionBarActivity {
+    public ArrayList<String> projectList = new ArrayList<String>();
+
 
     Context ctxt = this;
     /**
@@ -41,6 +51,24 @@ public class HomeList extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_list);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+        String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
+        JSONArray jsonArray = new JSONArray();
+
+        try{
+            jsonArray = new JSONArray(project);
+            for (int i = 0; i < jsonArray.length(); i++){
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String projectString = jsonObject.getString("project");
+                projectList.add(projectString);
+            }
+
+
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
+
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new TaskListPagerAdapter(getSupportFragmentManager());
@@ -49,6 +77,9 @@ public class HomeList extends ActionBarActivity {
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(mPager);
+
+
+
 
     }
 
@@ -91,7 +122,8 @@ public class HomeList extends ActionBarActivity {
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
      */
-    private class TaskListPagerAdapter extends FragmentStatePagerAdapter {
+    public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
+
         private final String[] TITLES = {"School", "IBM", "Hackathons", "Android"};
 
         public TaskListPagerAdapter(FragmentManager fm) {
@@ -100,7 +132,7 @@ public class HomeList extends ActionBarActivity {
 
         @Override
         public CharSequence getPageTitle(int position){
-            return TITLES[position];
+           return projectList.get(position);
         }
 
         @Override
@@ -110,7 +142,7 @@ public class HomeList extends ActionBarActivity {
 
         @Override
         public int getCount() {
-            return TITLES.length;
+            return projectList.size();
         }
     }
 

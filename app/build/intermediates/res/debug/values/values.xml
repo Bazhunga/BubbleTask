@@ -291,6 +291,7 @@
     <string name="create_new_project_tab">Create New Project Tab</string>
     <string name="create_new_task">Create New Task</string>
     <string name="done">Done</string>
+    <string name="project_list_prefs">Projects_List</string>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

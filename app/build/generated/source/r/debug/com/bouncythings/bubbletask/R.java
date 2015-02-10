@@ -2053,7 +2053,7 @@ containing a value of this type.
     public static final class id {
         public static final int NewProject=0x7f08004a;
         public static final int NewTask=0x7f08004b;
-        public static final int ProjectEntry=0x7f08005a;
+        public static final int ProjectEntry=0x7f08005b;
         public static final int action_bar=0x7f08003a;
         public static final int action_bar_activity_content=0x7f080000;
         public static final int action_bar_container=0x7f080039;
@@ -2067,7 +2067,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f080037;
         public static final int action_mode_bar_stub=0x7f080036;
         public static final int action_mode_close_button=0x7f080029;
-        public static final int action_settings=0x7f080064;
+        public static final int action_settings=0x7f080065;
         public static final int activity_chooser_view_content=0x7f08002a;
         public static final int always=0x7f08001d;
         public static final int beginning=0x7f080019;
@@ -2075,7 +2075,7 @@ containing a value of this type.
         public static final int bold=0x7f080022;
         public static final int button_accept=0x7f080057;
         public static final int button_cancel=0x7f080056;
-        public static final int buttonflat=0x7f080060;
+        public static final int buttonflat=0x7f080061;
         public static final int checkbox=0x7f080032;
         public static final int collapseActionView=0x7f08001e;
         public static final int content=0x7f080058;
@@ -2112,11 +2112,12 @@ containing a value of this type.
         public static final int never=0x7f080020;
         public static final int none=0x7f080010;
         public static final int normal=0x7f08000c;
-        public static final int number_indicator_spinner_content=0x7f08005e;
+        public static final int number_indicator_spinner_content=0x7f08005f;
         public static final int pager=0x7f080049;
-        public static final int priority_slider=0x7f08005c;
+        public static final int priority_slider=0x7f08005d;
         public static final int progress_circular=0x7f080007;
         public static final int progress_horizontal=0x7f080008;
+        public static final int project_edit_text=0x7f08005a;
         public static final int radio=0x7f080034;
         public static final int red=0x7f08004f;
         public static final int right=0x7f080018;
@@ -2131,22 +2132,22 @@ containing a value of this type.
         public static final int search_plate=0x7f080042;
         public static final int search_src_text=0x7f080043;
         public static final int search_voice_btn=0x7f080047;
-        public static final int shape_bacground=0x7f080063;
+        public static final int shape_bacground=0x7f080064;
         public static final int shortcut=0x7f080033;
         public static final int showCustom=0x7f080011;
         public static final int showHome=0x7f080012;
         public static final int showTitle=0x7f080013;
-        public static final int sliderText=0x7f08005b;
-        public static final int snackbar=0x7f08005f;
+        public static final int sliderText=0x7f08005c;
+        public static final int snackbar=0x7f080060;
         public static final int split_action_bar=0x7f080009;
         public static final int submit_area=0x7f080045;
         public static final int tabMode=0x7f08000d;
-        public static final int tab_title=0x7f080062;
+        public static final int tab_title=0x7f080063;
         public static final int tabs=0x7f080048;
-        public static final int text=0x7f080061;
+        public static final int text=0x7f080062;
         public static final int textView=0x7f080059;
         public static final int title=0x7f080030;
-        public static final int tv_priority=0x7f08005d;
+        public static final int tv_priority=0x7f08005e;
         public static final int up=0x7f08000a;
         public static final int useLogo=0x7f080014;
         public static final int viewColor=0x7f08004e;
@@ -2218,6 +2219,7 @@ containing a value of this type.
         public static final int create_new_project_tab=0x7f0a0013;
         public static final int create_new_task=0x7f0a0014;
         public static final int done=0x7f0a0015;
+        public static final int project_list_prefs=0x7f0a0016;
     }
     public static final class style {
         /**  Customize your theme here. 

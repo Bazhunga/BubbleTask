@@ -39,9 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Task Name"
-            android:text="Man, another thing to do eh?"
             android:textCursorDrawable="@drawable/text_cursor_pink"
-            app:baseColor="@color/fbutton_color_silver"
+            app:baseColor="@color/black"
             app:floatingLabel="highlight"
             app:hideUnderline="true"
             android:id="@+id/ProjectEntry" />
