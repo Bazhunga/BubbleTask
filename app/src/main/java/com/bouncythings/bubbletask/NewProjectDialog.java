@@ -45,6 +45,10 @@ public class NewProjectDialog extends DialogFragment {
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(getString(R.string.project_list_prefs), ja.toString());
                         editor.commit();
+
+                        //Listen for the affirmation and pass that back to the activity
+                        NewProjectDialogListener listener = (NewProjectDialogListener) getActivity();
+                        listener.onReturnValue(true);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -54,5 +58,9 @@ public class NewProjectDialog extends DialogFragment {
                 });
         // Create the AlertDialog object and return it
         return builder.create();
+    }
+
+    public interface NewProjectDialogListener{
+        public void onReturnValue(boolean createdProject);
     }
 }

@@ -36,6 +36,17 @@
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/fbutton_color_alizarin"
+            fab:fab_title="Delete current project"
+            fab:fab_colorPressed="@color/fbutton_color_pomegranate"
+            fab:fab_size="mini"
+            android:clickable="true"
+            android:id="@+id/DeleteProj"
+            android:onClick="deleteProject"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             fab:fab_colorNormal="@color/orange"
             fab:fab_title="New Project"
             fab:fab_colorPressed="@color/orange_pressed"
@@ -55,6 +66,8 @@
             android:clickable="true"
             android:id="@+id/NewTask"
             android:onClick="newTask"/>
+
+
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

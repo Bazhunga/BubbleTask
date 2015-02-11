@@ -1,7 +1,9 @@
 package com.bouncythings.bubbletask;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -25,11 +27,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-public class HomeList extends ActionBarActivity {
+public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
     public ArrayList<String> projectList = new ArrayList<String>();
 
 
     Context ctxt = this;
+    boolean refreshFlag = false;
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
@@ -50,7 +53,6 @@ public class HomeList extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_list);
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
         String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
         JSONArray jsonArray = new JSONArray();
@@ -74,12 +76,10 @@ public class HomeList extends ActionBarActivity {
         mPagerAdapter = new TaskListPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
+
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(mPager);
-
-
-
 
     }
 
@@ -124,8 +124,6 @@ public class HomeList extends ActionBarActivity {
      */
     public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
 
-        private final String[] TITLES = {"School", "IBM", "Hackathons", "Android"};
-
         public TaskListPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -153,6 +151,7 @@ public class HomeList extends ActionBarActivity {
         toast.show();
         DialogFragment dialog = new NewTaskDialog();
         dialog.show(getFragmentManager(), "NewTaskDialog");
+
     }
     public void newProject(View view){
         CharSequence msg = "Creating New Project";
@@ -164,11 +163,70 @@ public class HomeList extends ActionBarActivity {
 
     }
 
-    public void cancel(View view){
+    public void deleteProject(View view){
+        final int currentProject = mPager.getCurrentItem();
 
+        CharSequence msg = "Delete this project: " + String.valueOf(currentProject);
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(ctxt, msg, duration);
+        toast.show();
+
+        new AlertDialog.Builder(ctxt)
+                .setTitle("Delete Project")
+                .setMessage("Are you sure you want to delete this project? All your tasks will be lost")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Reset the projectList and populate it again
+                        projectList.remove(currentProject);
+
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+                        String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
+                        JSONArray jsonArray;
+
+                        try{
+                            jsonArray = new JSONArray(project);
+                            jsonArray.remove(currentProject);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString(getString(R.string.project_list_prefs), jsonArray.toString());
+                            editor.commit();
+                        } catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+//                        finish();
+//                        startActivity(getIntent());
+//                        overridePendingTransition(android.R.anim.fade_out,android.R.anim.fade_in);
+                        mPagerAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
-    public void done (View view){
+    @Override
+    public void onReturnValue(boolean projectCreated){
+        if (projectCreated == true) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+            String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
+            JSONArray jsonArray = new JSONArray();
 
+            try {
+                projectList.clear();
+                jsonArray = new JSONArray(project);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String projectString = jsonObject.getString("project");
+                    projectList.add(projectString);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mPagerAdapter.notifyDataSetChanged();
+        }
     }
 }
