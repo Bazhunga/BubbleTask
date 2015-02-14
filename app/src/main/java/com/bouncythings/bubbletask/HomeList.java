@@ -81,6 +81,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(mPager);
 
+        //DATABASING
+
+
+
     }
 
     @Override

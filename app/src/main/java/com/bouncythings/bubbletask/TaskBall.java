@@ -10,18 +10,21 @@ import java.util.Random;
 * Created by kevin on 1/26/15.
 */
 public class TaskBall {
+    //User Provided
     private String taskDesc; //This will be full description of the task
     private String taskShort; //This will be autogen-ed shortened description that will appear on the ball in the Animated View
+    private String dueDate;
     private int priority; //From 1 to 10
-    private boolean isCompleted; //Marks whether the task has been completed or not
+
+    //Application modified
     private Context c;
+    private boolean isCompleted; //Marks whether the task has been completed or not
     private int colour;
     private int mass;
-
+    private String project; //The project that the ball belongs to
     private Drawable circ;
 
-
-    //Determined by the class based on priority
+    //Ball properties determined by the class based on priority
     private int radius;
     private int leftX;
     private int topY;
@@ -56,18 +59,37 @@ public class TaskBall {
     //Each ball will be different
 
 
-    public TaskBall(String taskDesc, String taskShort, int priority, int colour, Context c) {
+    public TaskBall(String taskDesc, String taskShort, int priority, int colour, Context c, String project, String dueDate) {
         this.taskDesc = taskDesc;
         this.taskShort = taskShort;
         this.priority = priority;
         this.colour = colour;
+        this.project = project;
+        this.dueDate = dueDate;
         circ = c.getResources().getDrawable(R.drawable.circle);
         setRadius(priority);
         setVelocity(priority);
         setCoords();
+    //Determined by the class based on priority
         mass = priority * 80;
 //        setOverlaps(0);
         setPreviouslyWallTouching(false);
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public int getMass() {
