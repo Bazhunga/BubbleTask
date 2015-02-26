@@ -158,8 +158,8 @@ public class TaskBall {
     }
     private void setCoords(){
         //Generate random x coordinate on screen
-        leftX = com.bouncythings.bubbletask.AnimatedView.maxWidth/2;
-        topY = com.bouncythings.bubbletask.AnimatedView.maxHeight/2;
+        leftX = 1; //com.bouncythings.bubbletask.AnimatedView.maxWidth/2;
+        topY = 1; //com.bouncythings.bubbletask.AnimatedView.maxHeight/2;
         rightX = leftX + 2 * radius;
         bottomY = topY + 2 * radius;
         findCentre();
