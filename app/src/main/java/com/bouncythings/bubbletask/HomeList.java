@@ -153,7 +153,14 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctxt, msg, duration);
         toast.show();
+
+        final int currentProject = mPager.getCurrentItem();
+
         DialogFragment dialog = new NewTaskDialog();
+        Bundle data = new Bundle();
+        data.putStringArrayList("project_list", projectList);
+        data.putInt("current_project_index", currentProject);
+        dialog.setArguments(data);
         dialog.show(getFragmentManager(), "NewTaskDialog");
 
     }
@@ -168,6 +175,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void deleteProject(View view){
+        //Find the current item index (int)
         final int currentProject = mPager.getCurrentItem();
 
         CharSequence msg = "Delete this project: " + String.valueOf(currentProject);

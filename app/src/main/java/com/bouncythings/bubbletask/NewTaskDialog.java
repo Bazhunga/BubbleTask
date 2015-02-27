@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,28 +18,45 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import info.hoang8f.widget.FButton;
 
 
-public class NewTaskDialog extends DialogFragment implements CalendarPicker.OnDateChosenListener{
-    int priority;
+public class NewTaskDialog extends DialogFragment{
+    String szTaskName;
+    String szProjectName;
 
+    int iPriority;     //Priority is 1-10
+    long iDueDate;     //Store the due date in milliseconds
 
+    final DateFormat mdy = new SimpleDateFormat("MMMMMMMM dd, yyyy");
+    View rootView;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View rootView = inflater.inflate(R.layout.new_task_dialog, null);
+        rootView = inflater.inflate(R.layout.new_task_dialog, null);
         final TextView tv_priority = (TextView) rootView.findViewById(R.id.tv_priority);
+
+        //Setting up the spinner for the project
+        int index = getArguments().getInt("current_project_index");
+        final Spinner sp_project = (Spinner) rootView.findViewById(R.id.project_parent);
+        ArrayList<String> projectList = getArguments().getStringArrayList("project_list");
+        ArrayAdapter<String> sp_project_adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, projectList);
+        sp_project_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp_project.setAdapter(sp_project_adapter);
+        sp_project.setSelection(index);
+
+
         MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
         Date date = new Date();
-        DateFormat mdy = new SimpleDateFormat("MMMMMMMM dd, yyyy");
         String todayDate = mdy.format(date);
         dateChosen.setText(todayDate);
+
 
         final FButton date_picker_button = (FButton) rootView.findViewById(R.id.datePickerButton);
 
@@ -49,7 +68,6 @@ public class NewTaskDialog extends DialogFragment implements CalendarPicker.OnDa
 
             }
         });
-
 
         //Must declare the view so that the buttons can be accessed (like the priority slider)
         tv_priority.setText("Priority: 1");
@@ -72,7 +90,6 @@ public class NewTaskDialog extends DialogFragment implements CalendarPicker.OnDa
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-
                         CharSequence msg = "Priority: " + String.valueOf(prioritySlider.getValue());
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
@@ -90,29 +107,28 @@ public class NewTaskDialog extends DialogFragment implements CalendarPicker.OnDa
 
 
     }
-    public void onDateReturn(String date){
+    public void onDateReturn(long date){
+        String szDate = mdy.format(date);
+
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View v = inflater.inflate(R.layout.new_task_dialog, null);
-        CharSequence msg = "FINALLY!! " + date;
+        CharSequence msg = "FINALLY!! " + szDate;
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(v.getContext(), msg, duration);
+        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
         toast.show();
 
+        MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
+        dateChosen.setText(szDate);
+
+    }
+//    @Override
+//    public void onDatePressed(long date){
 //        LayoutInflater inflater = getActivity().getLayoutInflater();
-//        final View rootView = inflater.inflate(R.layout.new_task_dialog, null);
-//        MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
-//        dateChosen.setText(date);
-
-    }
-    @Override
-    public void onDatePressed(String date){
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View v = inflater.inflate(R.layout.new_task_dialog, null);
-        CharSequence msg = "FINALLY!! " + date;
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(v.getContext(), msg, duration);
-        toast.show();
-
-
-    }
+//        final View v = inflater.inflate(R.layout.new_task_dialog, null);
+//        CharSequence msg = "FINALLY!! " + date;
+//        int duration = Toast.LENGTH_SHORT;
+//        Toast toast = Toast.makeText(v.getContext(), msg, duration);
+//        toast.show();
+//
+//
+//    }
 }

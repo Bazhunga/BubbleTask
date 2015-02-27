@@ -3,28 +3,20 @@ package com.bouncythings.bubbletask;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CalendarView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CalendarPicker.OnDateChosenListener} interface
- * to handle interaction events.
- */
 public class CalendarPicker extends DialogFragment {
 
-    private OnDateChosenListener mListener;
+//    private OnDateChosenListener mListener;
 
     public CalendarPicker() {
         // Required empty public constructor
@@ -48,17 +40,12 @@ public class CalendarPicker extends DialogFragment {
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        String date = "";
-                        date = mdy.format(calendar.getDate());
-                        CharSequence msg = date;
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
-                        toast.show();
-
-                        //Extremly important NTS: Use find fragment by tag to get control over the fragment functions that you're currently using
+//                        String date = "";
+//                        date = mdy.format(calendar.getDate());
+                        //Extremely important NTS: Use find fragment by tag to get control over the fragment functions that you're currently using
                         //You can find the tag by how you first started the fragment in .show(getfragmentmanager, tag);
                         NewTaskDialog ntd = (NewTaskDialog) getFragmentManager().findFragmentByTag("NewTaskDialog");
-                        ntd.onDateReturn(date);
+                        ntd.onDateReturn(calendar.getDate());
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -111,8 +98,8 @@ public class CalendarPicker extends DialogFragment {
 //     * "http://developer.android.com/training/basics/fragments/communicating.html"
 //     * >Communicating with Other Fragments</a> for more information.
 //     */
-    public interface OnDateChosenListener {
-        public void onDatePressed(String date);
-    }
+//    public interface OnDateChosenListener {
+//        public void onDatePressed(long date);
+//    }
 
 }
