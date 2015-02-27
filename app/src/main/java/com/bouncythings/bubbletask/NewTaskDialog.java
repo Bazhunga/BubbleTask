@@ -51,12 +51,18 @@ public class NewTaskDialog extends DialogFragment{
         sp_project.setAdapter(sp_project_adapter);
         sp_project.setSelection(index);
 
-
-        MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
+        //Layout Elements
+        final MaterialEditText taskName = (MaterialEditText) rootView.findViewById(R.id.task_entry);
+        final MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
         Date date = new Date();
         String todayDate = mdy.format(date);
         dateChosen.setText(todayDate);
 
+        //Variable initialization
+        iPriority = 1;
+        iDueDate = System.currentTimeMillis();
+        szTaskName = "";
+        szProjectName = sp_project.getSelectedItem().toString();
 
         final FButton date_picker_button = (FButton) rootView.findViewById(R.id.datePickerButton);
 
@@ -90,10 +96,19 @@ public class NewTaskDialog extends DialogFragment{
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        CharSequence msg = "Priority: " + String.valueOf(prioritySlider.getValue());
+                        iPriority = prioritySlider.getValue();
+                        //iDueDate is automatically updated on dialog return
+                        szProjectName = sp_project.getSelectedItem().toString();
+                        szTaskName = taskName.getText().toString();
+
+                        CharSequence msg = "Priority: " + String.valueOf(iPriority) + "\r\n"
+                                            + "PName" + szProjectName + "\r\n"
+                                            + "TName" + szTaskName + "\r\n"
+                                            + "Ldate" + iDueDate;
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
                         toast.show();
+
 
                     }
                 })
@@ -109,26 +124,11 @@ public class NewTaskDialog extends DialogFragment{
     }
     public void onDateReturn(long date){
         String szDate = mdy.format(date);
-
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        CharSequence msg = "FINALLY!! " + szDate;
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
-        toast.show();
-
         MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
         dateChosen.setText(szDate);
+        iDueDate = date;
+
 
     }
-//    @Override
-//    public void onDatePressed(long date){
-//        LayoutInflater inflater = getActivity().getLayoutInflater();
-//        final View v = inflater.inflate(R.layout.new_task_dialog, null);
-//        CharSequence msg = "FINALLY!! " + date;
-//        int duration = Toast.LENGTH_SHORT;
-//        Toast toast = Toast.makeText(v.getContext(), msg, duration);
-//        toast.show();
-//
-//
-//    }
+
 }
