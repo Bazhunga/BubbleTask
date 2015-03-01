@@ -241,4 +241,27 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             mPagerAdapter.notifyDataSetChanged();
         }
     }
+
+    public void readDatabase(){
+//        TaskDbHelper mDbHelper = new TaskDbHelper(this);
+//        SQLiteDatabase dbTask = mDbHelper.getReadableDatabase();
+//        String[] projection = {
+//            TaskContract.TaskEntry._ID,
+//            TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
+//            TaskContract.TaskEntry.COLUMN_TASK_TITLE,
+//            TaskContract.TaskEntry.COLUMN_TASK_DESC,
+//            TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
+//            TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
+//            TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
+//        };
+//
+//        CharSequence msg = "Priority: " + String.valueOf(iPriority) + "\r\n"
+//                + "PName: " + szProjectName + "\r\n"
+//                + "TName: " + szTaskName + "\r\n"
+//                + "Ldate: " + iDueDate
+//                + "TNotes: " + szTaskNotes;
+//        int duration = Toast.LENGTH_SHORT;
+//        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
+//        toast.show();
+    }
 }

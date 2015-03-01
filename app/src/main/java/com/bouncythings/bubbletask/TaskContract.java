@@ -14,23 +14,28 @@ public class TaskContract {
     public static abstract class TaskEntry implements BaseColumns{
         public static final String TABLE_NAME                   = "Tasks";
         public static final String COLUMN_TASK_PROJECT          = "project";
-        public static final String COLUMN_TASK_TITLE            = "title";
-        public static final String COLUMN_TASK_DESC             = "description";
+        public static final String COLUMN_TASK_TITLE            = "taskname";
+        public static final String COLUMN_TASK_DESC             = "notes";
         public static final String COLUMN_TASK_PRIORITY         = "priority";
         public static final String COLUMN_TASK_DUEDATE          = "duedate";
         public static final String COLUMN_TASK_COMPLETE_STAT    = "iscomplete";
+        public static final String COLUMN_NAME_NULLABLE         = "";
     }
 
     private static final String TEXT_TYPE = " TEXT";
+    private static final String SQL_DATE = " INTEGER";
+    private static final String SQL_INT = " INTEGER";
+    private static final String SQL_BOOL = " INTEGER";
     private static final String COMMA_SEP = ",";
     public static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE IF NOT EXISTS " + TaskEntry.TABLE_NAME + " {" +
+            "CREATE TABLE IF NOT EXISTS " + TaskEntry.TABLE_NAME + " (" +
+            TaskEntry._ID + " INTEGER PRIMARY KEY," +
             TaskEntry.COLUMN_TASK_PROJECT + TEXT_TYPE + COMMA_SEP +
             TaskEntry.COLUMN_TASK_TITLE + TEXT_TYPE + COMMA_SEP +
             TaskEntry.COLUMN_TASK_DESC + TEXT_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_TASK_PRIORITY + TEXT_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_TASK_DUEDATE + TEXT_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_TASK_COMPLETE_STAT + TEXT_TYPE + COMMA_SEP +
+            TaskEntry.COLUMN_TASK_PRIORITY + SQL_INT + COMMA_SEP +
+            TaskEntry.COLUMN_TASK_DUEDATE + SQL_DATE + COMMA_SEP +
+            TaskEntry.COLUMN_TASK_COMPLETE_STAT + SQL_BOOL +
                     " )";
 
     public static final String SQL_DELETE_ENTRIES =

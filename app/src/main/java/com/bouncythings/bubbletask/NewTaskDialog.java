@@ -3,7 +3,9 @@ package com.bouncythings.bubbletask;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,7 +13,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gc.materialdesign.views.Slider;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -27,6 +28,7 @@ import info.hoang8f.widget.FButton;
 public class NewTaskDialog extends DialogFragment{
     String szTaskName;
     String szProjectName;
+    String szTaskNotes;
 
     int iPriority;     //Priority is 1-10
     long iDueDate;     //Store the due date in milliseconds
@@ -54,6 +56,7 @@ public class NewTaskDialog extends DialogFragment{
         //Layout Elements
         final MaterialEditText taskName = (MaterialEditText) rootView.findViewById(R.id.task_entry);
         final MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
+        final MaterialEditText taskNotes = (MaterialEditText) rootView.findViewById(R.id.task_notes);
         Date date = new Date();
         String todayDate = mdy.format(date);
         dateChosen.setText(todayDate);
@@ -100,15 +103,34 @@ public class NewTaskDialog extends DialogFragment{
                         //iDueDate is automatically updated on dialog return
                         szProjectName = sp_project.getSelectedItem().toString();
                         szTaskName = taskName.getText().toString();
+                        szTaskNotes = taskNotes.getText().toString();
 
-                        CharSequence msg = "Priority: " + String.valueOf(iPriority) + "\r\n"
-                                            + "PName" + szProjectName + "\r\n"
-                                            + "TName" + szTaskName + "\r\n"
-                                            + "Ldate" + iDueDate;
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
-                        toast.show();
+//                        CharSequence msg = "Priority: " + String.valueOf(iPriority) + "\r\n"
+//                                            + "PName: " + szProjectName + "\r\n"
+//                                            + "TName: " + szTaskName + "\r\n"
+//                                            + "Ldate: " + iDueDate
+//                                            + "TNotes: " + szTaskNotes;
+//                        int duration = Toast.LENGTH_SHORT;
+//                        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
+//                        toast.show();
 
+                        //Instantiate the database to put information into it
+                        TaskDbHelper mDbHelper = new TaskDbHelper(rootView.getContext());
+                        SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
+
+                        //Map the values you want to put in
+                        ContentValues values = new ContentValues();
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_PROJECT, id);
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_TITLE, szTaskName);
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_DESC, szTaskNotes);
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, iPriority);
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE, iDueDate);
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT, 0);
+                        long newRowId;
+                        newRowId = dbTask.insert(
+                                TaskContract.TaskEntry.TABLE_NAME,
+                                TaskContract.TaskEntry.COLUMN_NAME_NULLABLE,
+                                values);
 
                     }
                 })

@@ -127,6 +127,7 @@
                 android:hint="Due Date"
                 android:layout_weight="0.6"
                 android:paddingLeft="10dp"
+                android:textColor="@color/black"
                 app:baseColor="@color/black"
                 app:hideUnderline="true"
                 android:id="@+id/dueDate"
@@ -140,6 +141,7 @@
                 fbutton:shadowEnabled="true"
                 fbutton:shadowHeight="3dp"
                 fbutton:cornerRadius="8dp"
+                fbutton:buttonColor="@color/pink"
                 android:text="..."
                 android:id="@+id/datePickerButton"
                 android:layout_alignBottom="@+id/dueDate"
@@ -175,6 +177,17 @@
             android:text="Priority: "
             android:id="@+id/tv_priority"
             android:layout_gravity="right" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Notes"
+            android:textCursorDrawable="@drawable/text_cursor_pink"
+            app:baseColor="@color/black"
+            app:hideUnderline="true"
+            android:id="@+id/task_notes"/>
+
+
 
 
         <!--<LinearLayout-->
