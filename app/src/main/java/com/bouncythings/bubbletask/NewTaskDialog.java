@@ -120,7 +120,7 @@ public class NewTaskDialog extends DialogFragment{
 
                         //Map the values you want to put in
                         ContentValues values = new ContentValues();
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_PROJECT, id);
+                        values.put(TaskContract.TaskEntry.COLUMN_TASK_PROJECT, szProjectName);
                         values.put(TaskContract.TaskEntry.COLUMN_TASK_TITLE, szTaskName);
                         values.put(TaskContract.TaskEntry.COLUMN_TASK_DESC, szTaskNotes);
                         values.put(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, iPriority);

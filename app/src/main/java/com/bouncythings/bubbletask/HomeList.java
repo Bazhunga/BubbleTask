@@ -5,6 +5,8 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,6 +85,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         tabs.setViewPager(mPager);
 
         //DATABASING
+        readDatabase(); //Read the database
 
 
 
@@ -134,7 +138,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         @Override
         public CharSequence getPageTitle(int position){
-           return projectList.get(position);
+            return projectList.get(position);
         }
 
         @Override
@@ -243,25 +247,71 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void readDatabase(){
-//        TaskDbHelper mDbHelper = new TaskDbHelper(this);
-//        SQLiteDatabase dbTask = mDbHelper.getReadableDatabase();
-//        String[] projection = {
-//            TaskContract.TaskEntry._ID,
-//            TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
-//            TaskContract.TaskEntry.COLUMN_TASK_TITLE,
-//            TaskContract.TaskEntry.COLUMN_TASK_DESC,
-//            TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
-//            TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
-//            TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
-//        };
-//
-//        CharSequence msg = "Priority: " + String.valueOf(iPriority) + "\r\n"
-//                + "PName: " + szProjectName + "\r\n"
-//                + "TName: " + szTaskName + "\r\n"
-//                + "Ldate: " + iDueDate
-//                + "TNotes: " + szTaskNotes;
-//        int duration = Toast.LENGTH_SHORT;
-//        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
-//        toast.show();
+
+        TaskDbHelper dbHelper = new TaskDbHelper(this);
+        SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
+        String[] projection = {
+                TaskContract.TaskEntry._ID,
+                TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
+                TaskContract.TaskEntry.COLUMN_TASK_TITLE,
+                TaskContract.TaskEntry.COLUMN_TASK_DESC,
+                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
+                TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
+                TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
+        };
+
+        //Sorting order of the resulting cursor.
+        //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
+        //Select everything in the database where the project name matches the current focused page
+
+        String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+        String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+        int currentItemIndex = mPager.getCurrentItem();
+        String currentItemString = projectList.get(currentItemIndex);
+        String [] selectionArgs = {currentItemString}; //CURRENT PROJECT
+        Log.d("Projection", String.valueOf(projection.toString()));
+        Log.d("currenItemString", String.valueOf(currentItemString));
+
+        Cursor cursor_projectlist = dbTask.query (
+                TaskContract.TaskEntry.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+
+        //Iterate through cursor and create objects based on
+        cursor_projectlist.moveToFirst();
+        int projectCount = cursor_projectlist.getCount();
+
+        while (!cursor_projectlist.isAfterLast()){
+            int id, task_isCompleted, task_priority;
+            long task_date;
+            String task_project, task_title, task_notes;
+            id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
+            task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
+            task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
+            task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
+            task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT)) ;
+            task_title = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
+            task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
+            CharSequence msg = "Number of entries: " + projectCount +
+                    "Priority: " + task_priority + "\r\n"
+                    + "PName: " + task_project + "\r\n"
+                    + "TName: " + task_title + "\r\n"
+                    + "Ldate: " + task_date + "\r\n"
+                    + "TNotes: " + task_notes;
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(this, msg, duration);
+            toast.show();
+            cursor_projectlist.moveToNext();
+        }
+
+
+        cursor_projectlist.close();
+        dbTask.close();
+
     }
 }
