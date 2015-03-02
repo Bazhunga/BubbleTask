@@ -132,6 +132,9 @@ public class NewTaskDialog extends DialogFragment{
                                 TaskContract.TaskEntry.COLUMN_NAME_NULLABLE,
                                 values);
 
+                        //Call HomeList activity to refresh the list
+                        ((HomeList)getActivity()).readDatabase();
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +31,7 @@ import java.util.ArrayList;
 
 public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
     public ArrayList<String> projectList = new ArrayList<String>();
+    public ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
 
 
     Context ctxt = this;
@@ -268,9 +268,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
         int currentItemIndex = mPager.getCurrentItem();
         String currentItemString = projectList.get(currentItemIndex);
-        String [] selectionArgs = {currentItemString}; //CURRENT PROJECT
-        Log.d("Projection", String.valueOf(projection.toString()));
-        Log.d("currenItemString", String.valueOf(currentItemString));
+        String [] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
 
         Cursor cursor_projectlist = dbTask.query (
                 TaskContract.TaskEntry.TABLE_NAME,
@@ -289,24 +287,34 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         while (!cursor_projectlist.isAfterLast()){
             int id, task_isCompleted, task_priority;
             long task_date;
-            String task_project, task_title, task_notes;
+            String task_project, task_name, task_notes;
+
             id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
-            task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
-            task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
-            task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
+            task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
             task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT)) ;
-            task_title = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
+            task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
+            task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
             task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
-            CharSequence msg = "Number of entries: " + projectCount +
-                    "Priority: " + task_priority + "\r\n"
+            task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
+
+            TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, this);
+
+            //DEBUGGING CODE=======================================================
+            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
+                    + "Priority: " + task_priority + "\r\n"
                     + "PName: " + task_project + "\r\n"
-                    + "TName: " + task_title + "\r\n"
+                    + "TName: " + task_name + "\r\n"
                     + "Ldate: " + task_date + "\r\n"
                     + "TNotes: " + task_notes;
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(this, msg, duration);
             toast.show();
+            //=====================================================================
+            taskBallList.add(taskBall);
             cursor_projectlist.moveToNext();
+
+
+
         }
 
 

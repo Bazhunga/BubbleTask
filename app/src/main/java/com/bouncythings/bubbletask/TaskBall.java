@@ -11,18 +11,21 @@ import java.util.Random;
 */
 public class TaskBall {
     //User Provided
-    private String taskDesc; //This will be full description of the task
-    private String taskShort; //This will be autogen-ed shortened description that will appear on the ball in the Animated View
-    private String dueDate;
+    private int taskid;
+    private String taskName;
+    private String parentProject;
+    private long dueDate;
     private int priority; //From 1 to 10
+    private String taskDesc; //This will be full description of the task
+    private int isCompleted; //Marks whether the task has been completed or not
 
     //Application modified
     private Context c;
-    private boolean isCompleted; //Marks whether the task has been completed or not
     private int colour;
     private int mass;
     private String project; //The project that the ball belongs to
     private Drawable circ;
+    private String taskShort; //This will be autogen-ed shortened description that will appear on the ball in the Animated View
 
     //Ball properties determined by the class based on priority
     private int radius;
@@ -59,37 +62,55 @@ public class TaskBall {
     //Each ball will be different
 
 
-    public TaskBall(String taskDesc, String taskShort, int priority, int colour, Context c, String project, String dueDate) {
-        this.taskDesc = taskDesc;
-        this.taskShort = taskShort;
-        this.priority = priority;
-        this.colour = colour;
-        this.project = project;
+    public TaskBall(int taskid, String taskName, String parentProject, long dueDate, int priority, String taskDesc, int isCompleted, Context c) {
+        this.taskid = taskid;
+        this.taskName = taskName;
+        this.parentProject = parentProject;
         this.dueDate = dueDate;
+        this.priority = priority;
+        this.taskDesc = taskDesc;
+        this.isCompleted = isCompleted;
         circ = c.getResources().getDrawable(R.drawable.circle);
-        setRadius(priority);
-        setVelocity(priority);
-        setCoords();
-    //Determined by the class based on priority
-        mass = priority * 80;
-//        setOverlaps(0);
-        setPreviouslyWallTouching(false);
+//        setRadius(priority);
+//        setVelocity(priority);
+//        setCoords();
+//        //Determined by the class based on priority
+//        mass = priority * 80;
+////        setOverlaps(0);
+//        setPreviouslyWallTouching(false);
     }
 
-    public String getDueDate() {
+
+    public int getTaskid() {
+        return taskid;
+    }
+
+    public void setTaskid(int taskid) {
+        this.taskid = taskid;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getParentProject() {
+        return parentProject;
+    }
+
+    public void setParentProject(String parentProject) {
+        this.parentProject = parentProject;
+    }
+
+    public long getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(long dueDate) {
         this.dueDate = dueDate;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
     }
 
     public int getMass() {
@@ -201,11 +222,11 @@ public class TaskBall {
         centre[1] = topY + radius;
     }
 
-    public boolean isCompleted() {
+    public int isCompleted() {
         return isCompleted;
     }
 
-    public void setCompleted(boolean isCompleted) {
+    public void setCompleted(int isCompleted) {
         this.isCompleted = isCompleted;
     }
 

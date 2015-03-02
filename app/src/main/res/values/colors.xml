@@ -15,6 +15,9 @@
     <color name="matte_blue">#6699FF</color>
     <color name="black">#000000</color>
     <color name="ash">#878787</color>
+    <color name="completed_green">#00F020</color>
+    <color name="trash_red">#F02C00</color>
+    <color name="edit_yellow">#F0E800</color>
     <color name="fbutton_color_turquoise">#1abc9c</color>
     <color name="fbutton_color_green_sea">#16a085</color>
     <color name="fbutton_color_emerald">#2ecc71</color>

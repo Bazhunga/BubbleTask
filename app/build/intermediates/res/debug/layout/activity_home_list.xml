@@ -31,7 +31,7 @@
         fab:fab_addButtonColorPressed="@color/blue_semi_transparent_pressed"
         fab:fab_addButtonPlusIconColor="@color/half_black"
         fab:fab_labelStyle="@style/menu_labels_style"
-        >
+        android:id="@+id/view">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
@@ -43,17 +43,6 @@
             android:clickable="true"
             android:id="@+id/DeleteProj"
             android:onClick="deleteProject"/>
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/orange"
-            fab:fab_title="New Project"
-            fab:fab_colorPressed="@color/orange_pressed"
-            fab:fab_icon="@drawable/p"
-            android:clickable="true"
-            android:id="@+id/NewProject"
-            android:onClick="newProject"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
@@ -70,6 +59,20 @@
 
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        fab:fab_colorNormal="@color/orange"
+        fab:fab_title="New Project"
+        fab:fab_colorPressed="@color/orange_pressed"
+        fab:fab_icon="@drawable/p"
+        android:clickable="true"
+        android:id="@+id/NewProject"
+        android:onClick="newProject"
+        android:layout_alignBottom="@+id/view"
+        android:layout_alignStart="@+id/view"
+        android:layout_marginStart="82dp" />
 
 
 </RelativeLayout>

@@ -24,6 +24,9 @@ MERGED from com.android.support:support-v4:21.0.3:16:5
 MERGED from com.getbase:floatingactionbutton:1.7.0:12:5
 MERGED from com.github.navasmdc:MaterialDesign:1.0:11:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.android.support:recyclerview-v7:21.0.0:17:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.android.support:support-v4:21.0.3:16:5
 	android:label
 		ADDED from AndroidManifest.xml:8:9
 	android:allowBackup
@@ -61,9 +64,18 @@ MERGED from com.getbase:floatingactionbutton:1.7.0:8:5
 MERGED from info.hoang8f:fbutton:1.0.5:7:5
 MERGED from com.github.navasmdc:MaterialDesign:1.0:7:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.android.support:recyclerview-v7:21.0.0:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.android.support:support-v4:21.0.3:15:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
 	android:minSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
+activity#android.support.v7.widget.TestActivity
+ADDED from com.android.support:recyclerview-v7:21.0.0:18:9
+	android:label
+		ADDED from com.android.support:recyclerview-v7:21.0.0:18:19
+	android:name
+		ADDED from com.android.support:recyclerview-v7:21.0.0:18:60
