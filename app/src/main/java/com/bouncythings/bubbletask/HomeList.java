@@ -251,7 +251,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void readDatabase(){
-
+        taskBallList.clear();
         TaskDbHelper dbHelper = new TaskDbHelper(this);
         SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
         String[] projection = {
