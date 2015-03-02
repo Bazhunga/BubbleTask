@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="80dp">
+    android:layout_width="match_parent" android:layout_height="80dp"
+    android:id="@+id/swipe_element">
     <!-- Bottom View Start-->
     <LinearLayout
         android:background="#66ddff00"
@@ -38,15 +39,58 @@
     <!-- Bottom View End-->
 
     <!-- Surface View Start -->
-    <RelativeLayout
-        android:padding="10dp"
+    <LinearLayout
+        android:padding="3dp"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--What you want to show in SurfaceView-->
-        
 
 
-    </RelativeLayout>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView"
+            android:background="@color/fbutton_color_alizarin"
+            android:layout_weight="0.15"
+            />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:padding="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.85">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Task Name"
+                android:id="@+id/t_elem_name"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Due in # days"
+                android:id="@+id/t_elem_deadline"
+                android:layout_alignBottom="@+id/t_elem_name"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Task Description"
+                android:id="@+id/t_elem_desc"
+                android:layout_below="@+id/t_elem_name"
+                android:paddingTop="5dp"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
     <!-- Surface View End -->
 </com.daimajia.swipe.SwipeLayout>

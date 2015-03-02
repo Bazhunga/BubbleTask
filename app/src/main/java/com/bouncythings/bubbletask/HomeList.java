@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
     public ArrayList<String> projectList = new ArrayList<String>();
-    public ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
+    public static ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
 
 
     Context ctxt = this;
@@ -86,6 +86,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         //DATABASING
         readDatabase(); //Read the database
+
+        //Set Up ListView
+
+
 
 
 

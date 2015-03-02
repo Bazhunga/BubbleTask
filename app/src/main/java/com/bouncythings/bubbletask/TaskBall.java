@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
-* Created by kevin on 1/26/15.
-*/
-public class TaskBall {
+ * Created by kevin on 1/26/15.
+ */
+public class TaskBall { //implements Parcelable{
     //User Provided
     private int taskid;
     private String taskName;
@@ -332,4 +332,49 @@ public class TaskBall {
     public void setyVelocity(int yVelocity) {
         this.yVelocity = yVelocity;
     }
+
+//    //Parceling
+//
+//    // Parcelling part
+//    public TaskBall(Parcel in){
+//        String[] data = new String[3];
+//        in.readStringArray(data);
+//
+//        this.taskid = Integer.parseInt(data[0]);
+//        this.taskName = data[1];
+//        this.parentProject = data[2];
+//        this.dueDate = Long.parseLong(data[3]);
+//        this.priority = Integer.parseInt(data[4]);
+//        this.taskDesc = data[5];
+//        this.isCompleted = Integer.parseInt(data[6]);
+//        circ = c.getResources().getDrawable(R.drawable.circle);
+//    }
+//
+//    @Override
+//    public int describeContents(){
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeStringArray(new String[] {String.valueOf(this.taskid),
+//                this.taskName,
+//                this.parentProject,
+//                String.valueOf(this.dueDate),
+//                String.valueOf(this.priority),
+//                this.taskDesc,
+//                String.valueOf(this.isCompleted )});
+//    }
+//
+//
+//
+//    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+//        public TaskBall createFromParcel(Parcel in) {
+//            return new TaskBall(in);
+//        }
+//
+//        public TaskBall[] newArray(int size) {
+//            return new TaskBall[size];
+//        }
+//    };
 }
