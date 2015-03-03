@@ -32,5 +32,9 @@ public class TaskListSliderFragment extends Fragment {
         return rootView;
     }
 
+    public void updateData(){
+        swipe_adapter.notifyDataSetChanged();
+    }
+
 
 }

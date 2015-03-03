@@ -2088,7 +2088,6 @@ containing a value of this type.
         public static final int calendarView=0x7f08004d;
         public static final int checkbox=0x7f080032;
         public static final int collapseActionView=0x7f08001e;
-        public static final int content=0x7f08005a;
         public static final int contentDialog=0x7f080055;
         public static final int contentSelector=0x7f08004f;
         public static final int datePickerButton=0x7f080068;
@@ -2171,6 +2170,7 @@ containing a value of this type.
         public static final int tableRow3=0x7f080065;
         public static final int tabs=0x7f080048;
         public static final int task_entry=0x7f080061;
+        public static final int task_list_content=0x7f08005a;
         public static final int task_notes=0x7f08006c;
         public static final int text=0x7f080070;
         public static final int textView=0x7f08005c;

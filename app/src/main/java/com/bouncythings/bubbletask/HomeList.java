@@ -32,6 +32,7 @@ import java.util.ArrayList;
 public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
     public ArrayList<String> projectList = new ArrayList<String>();
     public static ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
+    TaskListSliderFragment task_list_view;
 
 
     Context ctxt = this;
@@ -92,7 +93,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
 
 
-
     }
 
     @Override
@@ -128,32 +128,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
-
-        public TaskListPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position){
-            return projectList.get(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return new TaskListSliderFragment();
-        }
-
-        @Override
-        public int getCount() {
-            return projectList.size();
-        }
     }
 
     public void newTask(View view){
@@ -250,6 +224,38 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         }
     }
 
+
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
+        //FragmentManager fman;
+        public TaskListPagerAdapter(FragmentManager fm) {
+            super(fm);
+            //fman = fm;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position){
+            return projectList.get(position);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            task_list_view = new TaskListSliderFragment();
+            //FragmentTransaction ft = fman.beginTransaction();
+            //ft.add(tlsf, "task_list_frag");
+
+            return task_list_view;
+        }
+
+        @Override
+        public int getCount() {
+            return projectList.size();
+        }
+    }
+
     public void readDatabase(){
         taskBallList.clear();
         TaskDbHelper dbHelper = new TaskDbHelper(this);
@@ -304,15 +310,15 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, this);
 
             //DEBUGGING CODE=======================================================
-            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
-                    + "Priority: " + task_priority + "\r\n"
-                    + "PName: " + task_project + "\r\n"
-                    + "TName: " + task_name + "\r\n"
-                    + "Ldate: " + task_date + "\r\n"
-                    + "TNotes: " + task_notes;
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(this, msg, duration);
-            toast.show();
+//            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
+//                    + "Priority: " + task_priority + "\r\n"
+//                    + "PName: " + task_project + "\r\n"
+//                    + "TName: " + task_name + "\r\n"
+//                    + "Ldate: " + task_date + "\r\n"
+//                    + "TNotes: " + task_notes;
+//            int duration = Toast.LENGTH_SHORT;
+//            Toast toast = Toast.makeText(this, msg, duration);
+//            toast.show();
             //=====================================================================
             taskBallList.add(taskBall);
             cursor_projectlist.moveToNext();
@@ -324,6 +330,13 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         cursor_projectlist.close();
         dbTask.close();
+
+        //Update view
+        //TaskListSliderFragment task_list_view = (TaskListSliderFragment) getSupportFragmentManager().findFragmentByTag("task_list_frag");
+        if (task_list_view != null){
+            task_list_view.updateData();
+
+        }
 
     }
 }
