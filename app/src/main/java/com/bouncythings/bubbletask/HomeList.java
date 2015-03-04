@@ -81,9 +81,33 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         mPager.setAdapter(mPagerAdapter);
 
 
+
+
         // Bind the tabs to the ViewPager
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(mPager);
+        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                readDatabase();
+
+                CharSequence msg = "Page numer: " + mPager.getCurrentItem();
+                int duration = Toast.LENGTH_LONG;
+                Toast toast = Toast.makeText(ctxt, msg, duration);
+                toast.show();
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         //DATABASING
         readDatabase(); //Read the database
@@ -327,7 +351,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         }
 
-
         cursor_projectlist.close();
         dbTask.close();
 
@@ -335,6 +358,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         //TaskListSliderFragment task_list_view = (TaskListSliderFragment) getSupportFragmentManager().findFragmentByTag("task_list_frag");
         if (task_list_view != null){
             task_list_view.updateData();
+
 
         }
 
