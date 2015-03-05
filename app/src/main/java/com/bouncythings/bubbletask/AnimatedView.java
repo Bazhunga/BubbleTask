@@ -19,8 +19,7 @@ public class AnimatedView extends ImageView {
     private Context mContext;
     private int xVelocity = 20;
     private int yVelocity = 10;
-    public static int maxWidth;
-    public static int maxHeight;
+
 
 
     // nts
@@ -32,10 +31,6 @@ public class AnimatedView extends ImageView {
 
     private Handler h;
     private final int FRAME_RATE =20;
-//    com.bouncythings.bubbletask.TaskBall circa;
-//    com.bouncythings.bubbletask.TaskBall circb;
-//    com.bouncythings.bubbletask.TaskBall circc;
-//    com.bouncythings.bubbletask.TaskBall circd;
     ArrayList<com.bouncythings.bubbletask.TaskBall> taskBallList = new ArrayList();
 
     public AnimatedView(Context context, AttributeSet attrs)  {
@@ -43,14 +38,6 @@ public class AnimatedView extends ImageView {
         mContext = context;
         h = new Handler();
 
-//        circa = new com.bouncythings.bubbletask.TaskBall("Sample", "sam", 4, 0x709EF4, mContext);
-//        circb = new com.bouncythings.bubbletask.TaskBall("Simple", "sam", 3, 0x709EF4, mContext);
-//        circc = new com.bouncythings.bubbletask.TaskBall("Simple", "sam", 2, 0x709EF4, mContext);
-//        circd = new com.bouncythings.bubbletask.TaskBall("Simple", "sam", 8, 0x709EF4, mContext);
-//        taskBallList.add(circa);
-//        taskBallList.add(circb);
-//        taskBallList.add(circc);
-//        taskBallList.add(circd);
     }
     private Runnable r = new Runnable() {
         @Override
@@ -60,14 +47,6 @@ public class AnimatedView extends ImageView {
         }
     };
     protected void onDraw(Canvas c) {
-//        drawBouncy(circ, c, 0, 0);
-//        drawBouncy(circ2, c, 100, 200);
-
-//        Drawable circle = mContext.getResources().getDrawable(R.drawable.circle);
-//        circle.setBounds(0, 0, 300, 300);
-//        circle.draw(c);
-//        circle.getBounds
-
 
         //You need to set the bounds of all the circ objects before drawing them
         //Need to adjust the placeDrawables such that the x and y are properties of objects
@@ -220,9 +199,6 @@ public class AnimatedView extends ImageView {
     @Override
     public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
-        maxWidth = this.getWidth();
-        //Log.d("MAXWIDTH HASHDKALSHDLK", String.valueOf(maxWidth));
-        maxHeight = this.getHeight() ;
     }
 
 }

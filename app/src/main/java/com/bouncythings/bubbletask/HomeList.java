@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +41,13 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
     Context ctxt = this;
     boolean refreshFlag = false;
+
+    //Used to draw circles for bubble visualization
+    public static int maxWidth;
+    public static int maxHeight;
+
+
+
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
@@ -84,6 +93,12 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         currentProjectIndex = mPager.getCurrentItem();
 
+        //Getting Display size data
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        maxWidth = size.x;
+        maxHeight = size.y;
 
 
 

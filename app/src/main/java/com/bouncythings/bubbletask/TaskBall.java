@@ -1,9 +1,7 @@
 package com.bouncythings.bubbletask;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.view.Display;
 
 import java.util.ArrayList;
 import java.util.Random;
