@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Animated_Bubbles"
+            android:label="@string/title_activity_animated__bubbles"
+            android:parentActivityName=".HomeList" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bouncythings.bubbletask.HomeList" />
+        </activity>
     </application>
 
 </manifest>

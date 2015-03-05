@@ -31,7 +31,17 @@
         fab:fab_addButtonColorPressed="@color/blue_semi_transparent_pressed"
         fab:fab_addButtonPlusIconColor="@color/half_black"
         fab:fab_labelStyle="@style/menu_labels_style"
-        >
+        android:id="@+id/view">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/edit_yellow"
+            fab:fab_title="BUBBLE IT!"
+            fab:fab_colorPressed="@color/fbutton_color_orange"
+            android:clickable="true"
+            android:id="@+id/bubble_it"
+            android:onClick="bubbleIt"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
@@ -66,6 +76,8 @@
             android:clickable="true"
             android:id="@+id/NewTask"
             android:onClick="newTask"/>
+
+
 
 
 

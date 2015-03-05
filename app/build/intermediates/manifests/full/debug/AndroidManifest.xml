@@ -23,6 +23,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.bouncythings.bubbletask.Animated_Bubbles"
+            android:label="@string/title_activity_animated__bubbles"
+            android:parentActivityName="com.bouncythings.bubbletask.HomeList" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bouncythings.bubbletask.HomeList" />
+        </activity>
+        <activity
             android:name="android.support.v7.widget.TestActivity"
             android:label="RecyclerViewTestActivity" />
     </application>

@@ -1,7 +1,9 @@
 package com.bouncythings.bubbletask;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.view.Display;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,7 +25,6 @@ public class TaskBall { //implements Parcelable{
     private Context c;
     private int colour;
     private int mass;
-    private String project; //The project that the ball belongs to
     private Drawable circ;
     private String taskShort; //This will be autogen-ed shortened description that will appear on the ball in the Animated View
 
@@ -71,13 +72,11 @@ public class TaskBall { //implements Parcelable{
         this.taskDesc = taskDesc;
         this.isCompleted = isCompleted;
         circ = c.getResources().getDrawable(R.drawable.circle);
-//        setRadius(priority);
-//        setVelocity(priority);
-//        setCoords();
-//        //Determined by the class based on priority
-//        mass = priority * 80;
-////        setOverlaps(0);
-//        setPreviouslyWallTouching(false);
+        setMass();
+        setRadius(priority);
+        setVelocity(priority);
+        setCoords();
+        setPreviouslyWallTouching(false);
     }
 
 
@@ -156,6 +155,10 @@ public class TaskBall { //implements Parcelable{
 //        this.overlaps = overlaps;
 //    }
 
+    private void setMass(){
+        mass = priority * 80;
+    }
+
     private void setVelocity(int priority){
         int random = rand.nextInt((10) + 1);
         int direction;
@@ -166,7 +169,7 @@ public class TaskBall { //implements Parcelable{
             direction = -1;
         }
 
-        xVelocity = 65/priority * direction;
+        xVelocity = 20/priority * direction;
 
         random = rand.nextInt((10) + 1);
         if (random > 5){
@@ -175,12 +178,12 @@ public class TaskBall { //implements Parcelable{
         else{
             direction = -1;
         }
-        yVelocity = 100/priority * direction;
+        yVelocity = 25/priority * direction;
     }
     private void setCoords(){
         //Generate random x coordinate on screen
-        leftX = 1; //com.bouncythings.bubbletask.AnimatedView.maxWidth/2;
-        topY = 1; //com.bouncythings.bubbletask.AnimatedView.maxHeight/2;
+        leftX = HomeList.maxWidth/2;
+        topY = HomeList.maxHeight/2;
         rightX = leftX + 2 * radius;
         bottomY = topY + 2 * radius;
         findCentre();
@@ -275,7 +278,7 @@ public class TaskBall { //implements Parcelable{
     }
 
     private void setRadius(int priority) {
-        this.radius = priority * 35;
+        this.radius = (int) 100; //(Math.atan(priority) * 100);
     }
 
 

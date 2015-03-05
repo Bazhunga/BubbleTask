@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,8 +33,9 @@ import java.util.ArrayList;
 public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
     public ArrayList<String> projectList = new ArrayList<String>();
     public static ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
-    TaskListSliderFragment task_list_view;
+    public static int currentProjectIndex;
 
+    TaskListSliderFragment task_list_view;
 
     Context ctxt = this;
     boolean refreshFlag = false;
@@ -80,6 +82,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         mPagerAdapter = new TaskListPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 
+        currentProjectIndex = mPager.getCurrentItem();
+
 
 
 
@@ -94,13 +98,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
             @Override
             public void onPageSelected(int position) {
+                currentProjectIndex = mPager.getCurrentItem();
                 readDatabase();
-
-                CharSequence msg = "Page numer: " + mPager.getCurrentItem();
-                int duration = Toast.LENGTH_LONG;
-                Toast toast = Toast.makeText(ctxt, msg, duration);
-                toast.show();
-
             }
 
             @Override
@@ -160,12 +159,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         Toast toast = Toast.makeText(ctxt, msg, duration);
         toast.show();
 
-        final int currentProject = mPager.getCurrentItem();
-
         DialogFragment dialog = new NewTaskDialog();
         Bundle data = new Bundle();
         data.putStringArrayList("project_list", projectList);
-        data.putInt("current_project_index", currentProject);
+        data.putInt("current_project_index", currentProjectIndex);
         dialog.setArguments(data);
         dialog.show(getFragmentManager(), "NewTaskDialog");
 
@@ -181,10 +178,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void deleteProject(View view){
-        //Find the current item index (int)
-        final int currentProject = mPager.getCurrentItem();
-
-        CharSequence msg = "Delete this project: " + String.valueOf(currentProject);
+        CharSequence msg = "Delete this project: " + String.valueOf(currentProjectIndex);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctxt, msg, duration);
         toast.show();
@@ -195,7 +189,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Reset the projectList and populate it again
-                        projectList.remove(currentProject);
+                        projectList.remove(currentProjectIndex);
 
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
                         String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
@@ -203,7 +197,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
                         try{
                             jsonArray = new JSONArray(project);
-                            jsonArray.remove(currentProject);
+                            jsonArray.remove(currentProjectIndex);
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString(getString(R.string.project_list_prefs), jsonArray.toString());
                             editor.commit();
@@ -224,6 +218,11 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    public void bubbleIt(View view){
+        Intent startBubbles = new Intent(this, Animated_Bubbles.class);
+        startActivity(startBubbles);
     }
 
     @Override
@@ -300,8 +299,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
         String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
-        int currentItemIndex = mPager.getCurrentItem();
-        String currentItemString = projectList.get(currentItemIndex);
+        String currentItemString = projectList.get(currentProjectIndex);
         String [] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
 
         Cursor cursor_projectlist = dbTask.query (
