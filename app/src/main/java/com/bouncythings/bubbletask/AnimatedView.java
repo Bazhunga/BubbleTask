@@ -185,14 +185,6 @@ public class AnimatedView extends ImageView {
         }
         circ.findCentre();
 
-//        Log.d("Dname", circ.getTaskDesc());
-//        Log.d("XLEFT", String.valueOf(circ.getLeftX()));
-//        Log.d("XRIGHT", String.valueOf(circ.getRightX()));
-//        Log.d("YTOP", String.valueOf(circ.getTopY()));
-//        Log.d("YBOT", String.valueOf(circ.getBottomY()));
-//        Log.d("RAD ", String.valueOf(circ.getRadius()));
-//        Log.d("Xvelo", String.valueOf(circ.getxVelocity()));
-
 
         circ.getCirc().setBounds(circ.getLeftX(), circ.getTopY(), circ.getRightX(), circ.getBottomY());
     }

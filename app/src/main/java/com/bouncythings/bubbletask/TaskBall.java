@@ -276,7 +276,18 @@ public class TaskBall { //implements Parcelable{
     }
 
     private void setRadius(int priority) {
-        this.radius = (int) 100; //(Math.atan(priority) * 100);
+        //Requirements
+        // 1. Vastness in sizing depends on number of tasks and urgency. Closer deadlline + higher priority = larger ball
+        // 2. When there are a lot of balls the total size needs to be scaled down
+        // 3. Speed must decrease as #balls increase
+        // 4. Size: 3 balls: upper threshold is 450, 4 balls: 300, 5 balls:
+        if (priority <= 3 ){
+            this.radius = (int) (priority * 0.3 * 110);
+        }
+        else{
+            this.radius = (int) (priority * 0.25 * 110);
+        }
+         //(Math.atan(priority) * 100);
     }
 
 
