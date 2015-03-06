@@ -2089,6 +2089,7 @@ containing a value of this type.
         public static final int calendar=0x7f080069;
         public static final int calendarView=0x7f080050;
         public static final int checkbox=0x7f080032;
+        public static final int clear_data=0x7f080080;
         public static final int collapseActionView=0x7f08001e;
         public static final int contentDialog=0x7f080058;
         public static final int contentSelector=0x7f080052;

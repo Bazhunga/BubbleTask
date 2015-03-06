@@ -64,10 +64,14 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
      */
     private PagerAdapter mPagerAdapter;
 
+    PagerSlidingTabStrip tabs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_list);
+
+        //Setup Tab Strip Content
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
         String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
         JSONArray jsonArray = new JSONArray();
@@ -84,7 +88,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         } catch (JSONException e){
             e.printStackTrace();
         }
-
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -103,7 +106,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
 
         // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(mPager);
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -124,6 +127,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         });
 
         //DATABASING
+        TaskDbHelper mDbHelper = new TaskDbHelper(this);
+        SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
+        mDbHelper.createDatabase(dbTask);
+
         readDatabase(); //Read the database
 
         //Set Up ListView
@@ -164,6 +171,15 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.clear_data){
+            //Drop the database
+            //Instantiate the database to put information into it
+            TaskDbHelper mDbHelper = new TaskDbHelper(this);
+            SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
+            mDbHelper.dropDatabase(dbTask);
+            mDbHelper.createDatabase(dbTask);
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -193,10 +209,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void deleteProject(View view){
-        CharSequence msg = "Delete this project: " + String.valueOf(currentProjectIndex);
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(ctxt, msg, duration);
-        toast.show();
+        //TODO: YOU NEED TO DELETE ALL THIS FROM THE DATABASE AS WELL!!
 
         new AlertDialog.Builder(ctxt)
                 .setTitle("Delete Project")
@@ -219,10 +232,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         } catch (JSONException e){
                             e.printStackTrace();
                         }
-
-//                        finish();
-//                        startActivity(getIntent());
-//                        overridePendingTransition(android.R.anim.fade_out,android.R.anim.fade_in);
                         mPagerAdapter.notifyDataSetChanged();
                     }
                 })
@@ -295,84 +304,86 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void readDatabase(){
+        //In case the user had dropped the database, recreate
+
         taskBallList.clear();
-        TaskDbHelper dbHelper = new TaskDbHelper(this);
-        SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
-        String[] projection = {
-                TaskContract.TaskEntry._ID,
-                TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
-                TaskContract.TaskEntry.COLUMN_TASK_TITLE,
-                TaskContract.TaskEntry.COLUMN_TASK_DESC,
-                TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
-                TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
-                TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
-        };
+        if (projectList.size() != 0) {
+            TaskDbHelper dbHelper = new TaskDbHelper(this);
+            SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
+            String[] projection = {
+                    TaskContract.TaskEntry._ID,
+                    TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
+                    TaskContract.TaskEntry.COLUMN_TASK_TITLE,
+                    TaskContract.TaskEntry.COLUMN_TASK_DESC,
+                    TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
+                    TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
+                    TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
+            };
 
-        //Sorting order of the resulting cursor.
-        //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
-        //Select everything in the database where the project name matches the current focused page
+            //Sorting order of the resulting cursor.
+            //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
+            //Select everything in the database where the project name matches the current focused page
 
-        String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
-        String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
-        String currentItemString = projectList.get(currentProjectIndex);
-        String [] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+            String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+            String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+            String currentItemString = projectList.get(currentProjectIndex);
+            String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
 
-        Cursor cursor_projectlist = dbTask.query (
-                TaskContract.TaskEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                sortOrder
-        );
+            Cursor cursor_projectlist = dbTask.query(
+                    TaskContract.TaskEntry.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    sortOrder
+            );
 
-        //Iterate through cursor and create objects based on
-        cursor_projectlist.moveToFirst();
-        int projectCount = cursor_projectlist.getCount();
+            //Iterate through cursor and create objects based on
+            cursor_projectlist.moveToFirst();
+            int projectCount = cursor_projectlist.getCount();
 
-        while (!cursor_projectlist.isAfterLast()){
-            int id, task_isCompleted, task_priority;
-            long task_date;
-            String task_project, task_name, task_notes;
+            while (!cursor_projectlist.isAfterLast()) {
+                int id, task_isCompleted, task_priority;
+                long task_date;
+                String task_project, task_name, task_notes;
 
-            id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
-            task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
-            task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT)) ;
-            task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
-            task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
-            task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
-            task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
+                id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
+                task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
+                task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT));
+                task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
+                task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
+                task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
+                task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
 
-            TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, this);
+                TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, this);
 
-            //DEBUGGING CODE=======================================================
-//            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
-//                    + "Priority: " + task_priority + "\r\n"
-//                    + "PName: " + task_project + "\r\n"
-//                    + "TName: " + task_name + "\r\n"
-//                    + "Ldate: " + task_date + "\r\n"
-//                    + "TNotes: " + task_notes;
-//            int duration = Toast.LENGTH_SHORT;
-//            Toast toast = Toast.makeText(this, msg, duration);
-//            toast.show();
-            //=====================================================================
-            taskBallList.add(taskBall);
-            cursor_projectlist.moveToNext();
-
-
-
-        }
-
-        cursor_projectlist.close();
-        dbTask.close();
-
-        //Update view
-        //TaskListSliderFragment task_list_view = (TaskListSliderFragment) getSupportFragmentManager().findFragmentByTag("task_list_frag");
-        if (task_list_view != null){
-            task_list_view.updateData();
+                //DEBUGGING CODE=======================================================
+                //            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
+                //                    + "Priority: " + task_priority + "\r\n"
+                //                    + "PName: " + task_project + "\r\n"
+                //                    + "TName: " + task_name + "\r\n"
+                //                    + "Ldate: " + task_date + "\r\n"
+                //                    + "TNotes: " + task_notes;
+                //            int duration = Toast.LENGTH_SHORT;
+                //            Toast toast = Toast.makeText(this, msg, duration);
+                //            toast.show();
+                //=====================================================================
+                taskBallList.add(taskBall);
+                cursor_projectlist.moveToNext();
 
 
+            }
+
+            cursor_projectlist.close();
+            dbTask.close();
+
+            //Update view
+            if (task_list_view != null) {
+                task_list_view.updateData();
+
+
+            }
         }
 
     }

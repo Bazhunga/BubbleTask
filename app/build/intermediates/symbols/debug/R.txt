@@ -547,6 +547,7 @@ int id buttonflat 0x7f080072
 int id calendar 0x7f080069
 int id calendarView 0x7f080050
 int id checkbox 0x7f080032
+int id clear_data 0x7f080080
 int id collapseActionView 0x7f08001e
 int id contentDialog 0x7f080058
 int id contentSelector 0x7f080052
