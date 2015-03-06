@@ -2,6 +2,7 @@ package com.bouncythings.bubbletask;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -31,7 +32,7 @@ public class AnimatedView extends ImageView {
 
     private Handler h;
     private final int FRAME_RATE =20;
-    ArrayList<com.bouncythings.bubbletask.TaskBall> taskBallList = new ArrayList();
+
 
     public AnimatedView(Context context, AttributeSet attrs)  {
         super(context, attrs);
@@ -48,6 +49,11 @@ public class AnimatedView extends ImageView {
     };
     protected void onDraw(Canvas c) {
 
+        Paint paint = new Paint();
+        paint.setColor(getResources().getColor(R.color.fbutton_color_wet_asphalt));
+        paint.setTextSize(30); //Default 30
+        paint.setTextAlign(Paint.Align.CENTER);
+
         //You need to set the bounds of all the circ objects before drawing them
         //Need to adjust the placeDrawables such that the x and y are properties of objects
 
@@ -56,9 +62,21 @@ public class AnimatedView extends ImageView {
         }
 
         //Draw them
+        int [] textCentre = new int [2] ;
+        int textX;
+        TaskBall tb;
+
         for (int i = 0; i < tbList.size(); i++ ){
-            tbList.get(i).getCirc().draw(c);
+            tb = tbList.get(i);
+            tb.getCirc().draw(c);
+            //Draw the corresponding text
+            textCentre = tb.getCentre(); //Only use the y component
+            textX = tb.getLeftX();
+            paint.setTextSize(tb.getTextSize());
+            c.drawText(tb.getTaskName_truncated(), textCentre[0], textCentre[1], paint);
         }
+
+
         detectCollision();
 
         //Ensure proper placements so there are no overlaps

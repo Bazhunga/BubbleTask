@@ -20,11 +20,13 @@ public class TaskBall { //implements Parcelable{
     private int isCompleted; //Marks whether the task has been completed or not
 
     //Application modified
+    private String taskName_truncated;
     private Context c;
     private int colour;
     private int mass;
     private Drawable circ;
     private String taskShort; //This will be autogen-ed shortened description that will appear on the ball in the Animated View
+    private int textSize;
 
     //Ball properties determined by the class based on priority
     private int radius;
@@ -64,6 +66,7 @@ public class TaskBall { //implements Parcelable{
     public TaskBall(int taskid, String taskName, String parentProject, long dueDate, int priority, String taskDesc, int isCompleted, Context c) {
         this.taskid = taskid;
         this.taskName = taskName;
+        setTaskName_truncated(taskName);
         this.parentProject = parentProject;
         this.dueDate = dueDate;
         this.priority = priority;
@@ -75,8 +78,29 @@ public class TaskBall { //implements Parcelable{
         setVelocity(priority);
         setCoords();
         setPreviouslyWallTouching(false);
+        setTextSize();
     }
 
+    public int getTextSize() {
+        return textSize;
+    }
+
+    public void setTextSize() {
+        this.textSize = (int) (70 * Math.log10( priority + 0.778));
+    }
+
+    public String getTaskName_truncated() {
+        return taskName_truncated;
+    }
+
+    public void setTaskName_truncated(String taskName) {
+        if (taskName.length() <= 20){
+            this.taskName_truncated = taskName;
+        }
+        else {
+            this.taskName_truncated = taskName.substring(0, 18) + "...";
+        }
+    }
 
     public int getTaskid() {
         return taskid;

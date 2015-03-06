@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 
 import java.util.List;
+import java.util.Date;
+
 
 /**
  * Created by kevin on 3/1/15.
@@ -44,10 +46,18 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         String s_t_name = currentTask.getTaskName();
         String s_t_desc = currentTask.getTaskDesc();
         long l_t_deadline = currentTask.getDueDate();
+        Date date = new Date();
+        long currentDate = date.getTime();
+        long daysUntil = (l_t_deadline - currentDate) / (1000*60*60*24);
 
         tv_t_name.setText(s_t_name);
         tv_t_desc.setText(s_t_desc);
-        tv_t_duedate.setText(String.valueOf(l_t_deadline));
+        if (daysUntil > 0){
+            tv_t_duedate.setText("Due in " + Math.abs(daysUntil) + " days");
+        }
+        else{
+            tv_t_duedate.setText("Overdue by " + Math.abs(daysUntil) + " days");
+        }
     }
 
     @Override
