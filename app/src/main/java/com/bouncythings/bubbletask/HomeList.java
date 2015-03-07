@@ -262,6 +262,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         } catch (JSONException e){
                             e.printStackTrace();
                         }
+                        currentProjectIndex--; //Since we've deleted a project, we move to the previous page in viewpager,
+                                               //which is 1 less than the current project index
                         mPagerAdapter.notifyDataSetChanged();
 
 
