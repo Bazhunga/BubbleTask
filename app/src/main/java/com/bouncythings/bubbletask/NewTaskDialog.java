@@ -133,6 +133,8 @@ public class NewTaskDialog extends DialogFragment{
                                 values);
 
                         //Call HomeList activity to refresh the list
+                        //Test this buy creating a project, adding a task and executing Bubble It!
+                        //If the project has been refreshed then bubbles appear
                         ((HomeList)getActivity()).refreshProjectTasks();
 
                     }

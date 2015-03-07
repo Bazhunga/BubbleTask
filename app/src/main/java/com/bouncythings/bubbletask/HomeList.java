@@ -120,6 +120,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             @Override
             public void onPageSelected(int position) {
                 currentProjectIndex = mPager.getCurrentItem();
+                if (task_list_view != null){
+                    task_list_view.switchFragments();
+                }
+
                 //readDatabase();
             }
 
@@ -310,6 +314,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
     public void refreshProjectTasks(){
         new LoadProjectTasks().execute();
+
         //In case the user had dropped the database, recreate
 
 //        taskBallList.clear();
@@ -474,7 +479,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             dbHelper.close();
             //Update view
             if (task_list_view != null) {
-                task_list_view.updateData();
+                task_list_view.switchFragments();
             }
 
             Log.d("Objects", tb_manager.getListList().toString());
@@ -549,7 +554,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             dbHelper.close();
             //Update view
             if (task_list_view != null) {
-                task_list_view.updateData();
+                task_list_view.switchFragments();
             }
 
             Log.d("Objects", tb_manager.getListList().toString());

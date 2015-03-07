@@ -12,6 +12,9 @@ import android.widget.ListView;
 public class TaskListSliderFragment extends Fragment {
 
     TaskListSwipeAdapter swipe_adapter;
+    ViewGroup rootView;
+    TaskBall_Manager tbm;
+    ListView swipe_listview;
 
     public TaskListSliderFragment(){
 
@@ -20,11 +23,11 @@ public class TaskListSliderFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
+        rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_task_page, container, false);
-        ListView swipe_listview = (ListView) rootView.findViewById(R.id.swipe_listView);
+        swipe_listview = (ListView) rootView.findViewById(R.id.swipe_listView);
 
-        TaskBall_Manager tbm = new TaskBall_Manager();
+        tbm = new TaskBall_Manager();
 
         swipe_adapter = new TaskListSwipeAdapter(rootView.getContext(), tbm.getProject_TaskBallList(HomeList.currentProjectIndex));
         swipe_listview.setAdapter(swipe_adapter);
@@ -36,6 +39,10 @@ public class TaskListSliderFragment extends Fragment {
 
     public void updateData(){
         swipe_adapter.notifyDataSetChanged();
+    }
+    public void switchFragments(){
+        swipe_adapter = new TaskListSwipeAdapter(rootView.getContext(), tbm.getProject_TaskBallList(HomeList.currentProjectIndex));
+        swipe_listview.setAdapter(swipe_adapter);
     }
 
 
