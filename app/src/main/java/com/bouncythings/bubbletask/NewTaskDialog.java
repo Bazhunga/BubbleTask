@@ -133,7 +133,7 @@ public class NewTaskDialog extends DialogFragment{
                                 values);
 
                         //Call HomeList activity to refresh the list
-                        ((HomeList)getActivity()).readDatabase();
+                        ((HomeList)getActivity()).refreshProjectTasks();
 
                     }
                 })

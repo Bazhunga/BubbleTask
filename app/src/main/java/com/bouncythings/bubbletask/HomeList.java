@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +42,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     public static int currentProjectIndex;
 
     TaskListSliderFragment task_list_view;
+
 
     Context ctxt = this;
     boolean refreshFlag = false;
@@ -105,8 +108,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         maxWidth = size.x;
         maxHeight = size.y;
 
-
-
         // Bind the tabs to the ViewPager
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(mPager);
@@ -119,7 +120,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             @Override
             public void onPageSelected(int position) {
                 currentProjectIndex = mPager.getCurrentItem();
-                readDatabase();
+                //readDatabase();
             }
 
             @Override
@@ -133,13 +134,38 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
         mDbHelper.createDatabase(dbTask);
 
-        readDatabase(); //Read the database
+        //readDatabase(); //Read the database
+        new LoadDatabaseTasks_complete().execute();
 
         //Set Up ListView
 
+    }
+    /**
+     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
+     * sequence.
+     */
+    public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
+        //FragmentManager fman;
+        public TaskListPagerAdapter(FragmentManager fm) {
+            super(fm);
+            //fman = fm;
+        }
 
+        @Override
+        public CharSequence getPageTitle(int position){
+            return projectList.get(position);
+        }
 
+        @Override
+        public Fragment getItem(int position) {
+            task_list_view = new TaskListSliderFragment();
+            return task_list_view;
+        }
 
+        @Override
+        public int getCount() {
+            return projectList.size();
+        }
     }
 
     @Override
@@ -220,6 +246,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                     public void onClick(DialogInterface dialog, int which) {
                         //Reset the projectList and populate it again
                         projectList.remove(currentProjectIndex);
+                        //Remove the project from the static project_list
+                        taskball_manager.removeProject_TaskBallList(currentProjectIndex);
 
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
                         String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
@@ -235,6 +263,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                             e.printStackTrace();
                         }
                         mPagerAdapter.notifyDataSetChanged();
+
+
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -274,43 +304,191 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
 
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
-        //FragmentManager fman;
-        public TaskListPagerAdapter(FragmentManager fm) {
-            super(fm);
-            //fman = fm;
+
+
+    public void refreshProjectTasks(){
+        new LoadProjectTasks().execute();
+        //In case the user had dropped the database, recreate
+
+//        taskBallList.clear();
+//        if (projectList.size() != 0) {
+//            TaskDbHelper dbHelper = new TaskDbHelper(this);
+//            SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
+//            String[] projection = {
+//                    TaskContract.TaskEntry._ID,
+//                    TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
+//                    TaskContract.TaskEntry.COLUMN_TASK_TITLE,
+//                    TaskContract.TaskEntry.COLUMN_TASK_DESC,
+//                    TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
+//                    TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
+//                    TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
+//            };
+//
+//            //Sorting order of the resulting cursor.
+//            //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
+//            //Select everything in the database where the project name matches the current focused page
+//
+//            String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+//            String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+//            String currentItemString = projectList.get(currentProjectIndex);
+//            String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+//
+//            Cursor cursor_projectlist = dbTask.query(
+//                    TaskContract.TaskEntry.TABLE_NAME,
+//                    projection,
+//                    selection,
+//                    selectionArgs,
+//                    null,
+//                    null,
+//                    sortOrder
+//            );
+//
+//            //Iterate through cursor and create objects based on
+//            cursor_projectlist.moveToFirst();
+//            int projectCount = cursor_projectlist.getCount();
+//
+//            while (!cursor_projectlist.isAfterLast()) {
+//                int id, task_isCompleted, task_priority;
+//                long task_date;
+//                String task_project, task_name, task_notes;
+//
+//                id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
+//                task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
+//                task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT));
+//                task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
+//                task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
+//                task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
+//                task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
+//
+//                TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, this);
+//
+//                //DEBUGGING CODE=======================================================
+//                //            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
+//                //                    + "Priority: " + task_priority + "\r\n"
+//                //                    + "PName: " + task_project + "\r\n"
+//                //                    + "TName: " + task_name + "\r\n"
+//                //                    + "Ldate: " + task_date + "\r\n"
+//                //                    + "TNotes: " + task_notes;
+//                //            int duration = Toast.LENGTH_SHORT;
+//                //            Toast toast = Toast.makeText(this, msg, duration);
+//                //            toast.show();
+//                //=====================================================================
+//                taskBallList.add(taskBall);
+//                cursor_projectlist.moveToNext();
+//
+//
+//            }
+//
+//            cursor_projectlist.close();
+//            dbTask.close();
+//
+//            //Update view
+//            if (task_list_view != null) {
+//                task_list_view.updateData();
+//
+//
+//            }
+//        }
+
+    }
+    public class LoadDatabaseTasks_complete extends AsyncTask<Void, Void, Void> {
+        TaskDbHelper dbHelper;
+        Cursor cursor_projectlist;
+        TaskBall_Manager tb_manager;
+        @Override
+        protected Void doInBackground(Void... params){
+            tb_manager = new TaskBall_Manager();
+            tb_manager.clearAll();
+
+            if (projectList.size() != 0) {
+                dbHelper = new TaskDbHelper(ctxt);
+                SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
+                String[] projection = {
+                        TaskContract.TaskEntry._ID,
+                        TaskContract.TaskEntry.COLUMN_TASK_PROJECT,
+                        TaskContract.TaskEntry.COLUMN_TASK_TITLE,
+                        TaskContract.TaskEntry.COLUMN_TASK_DESC,
+                        TaskContract.TaskEntry.COLUMN_TASK_PRIORITY,
+                        TaskContract.TaskEntry.COLUMN_TASK_DUEDATE,
+                        TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
+                };
+
+                //Sorting order of the resulting cursor.
+                //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
+                //Select everything in the database where the project name matches the current focused page
+
+                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+                String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+
+                for (int index = 0; index < projectList.size(); index++) {
+                    String currentItemString = projectList.get(index);
+                    String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+
+                    tb_manager.addProject_TaskBallList(currentItemString);
+
+                    cursor_projectlist = dbTask.query(
+                            TaskContract.TaskEntry.TABLE_NAME,
+                            projection,
+                            selection,
+                            selectionArgs,
+                            null,
+                            null,
+                            sortOrder
+                    );
+
+                    //Iterate through cursor and create objects based on
+                    cursor_projectlist.moveToFirst();
+
+                    while (!cursor_projectlist.isAfterLast()) {
+                        int id, task_isCompleted, task_priority;
+                        long task_date;
+                        String task_project, task_name, task_notes;
+
+                        //id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
+                        task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
+                        task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT));
+                        task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
+                        task_priority = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY));
+                        task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
+                        task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
+
+                        TaskBall taskBall = new TaskBall(task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, ctxt);
+
+                        tb_manager.addTaskBall(index, taskBall);
+                        cursor_projectlist.moveToNext();
+
+
+                    }
+
+                }
+            }
+            return null;
         }
 
-        @Override
-        public CharSequence getPageTitle(int position){
-            return projectList.get(position);
-        }
 
         @Override
-        public Fragment getItem(int position) {
-            task_list_view = new TaskListSliderFragment();
-            //FragmentTransaction ft = fman.beginTransaction();
-            //ft.add(tlsf, "task_list_frag");
+        protected void onPostExecute(Void result){
+            cursor_projectlist.close();
+            dbHelper.close();
+            //Update view
+            if (task_list_view != null) {
+                task_list_view.updateData();
+            }
 
-            return task_list_view;
-        }
-
-        @Override
-        public int getCount() {
-            return projectList.size();
+            Log.d("Objects", tb_manager.getListList().toString());
         }
     }
 
-    public void readDatabase(){
-        //In case the user had dropped the database, recreate
+    public class LoadProjectTasks extends AsyncTask<Void, Void, Void> {
+        TaskDbHelper dbHelper;
+        Cursor cursor_projectlist;
+        TaskBall_Manager tb_manager;
+        @Override
+        protected Void doInBackground(Void... params){
+            tb_manager = new TaskBall_Manager();
+            tb_manager.clearProjectTasks(currentProjectIndex);
+            dbHelper = new TaskDbHelper(ctxt);
 
-        taskBallList.clear();
-        if (projectList.size() != 0) {
-            TaskDbHelper dbHelper = new TaskDbHelper(this);
             SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
             String[] projection = {
                     TaskContract.TaskEntry._ID,
@@ -322,16 +500,15 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                     TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
             };
 
-            //Sorting order of the resulting cursor.
-            //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
-            //Select everything in the database where the project name matches the current focused page
-
             String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
             String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+
             String currentItemString = projectList.get(currentProjectIndex);
             String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
 
-            Cursor cursor_projectlist = dbTask.query(
+            tb_manager.addProject_TaskBallList(currentItemString);
+
+            cursor_projectlist = dbTask.query(
                     TaskContract.TaskEntry.TABLE_NAME,
                     projection,
                     selection,
@@ -343,14 +520,12 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
             //Iterate through cursor and create objects based on
             cursor_projectlist.moveToFirst();
-            int projectCount = cursor_projectlist.getCount();
 
             while (!cursor_projectlist.isAfterLast()) {
                 int id, task_isCompleted, task_priority;
                 long task_date;
                 String task_project, task_name, task_notes;
 
-                id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
                 task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
                 task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT));
                 task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
@@ -358,35 +533,25 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
                 task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
 
-                TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, this);
+                TaskBall taskBall = new TaskBall(task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, ctxt);
 
-                //DEBUGGING CODE=======================================================
-                //            CharSequence msg = "Number of entries: " + projectCount + "\r\n"
-                //                    + "Priority: " + task_priority + "\r\n"
-                //                    + "PName: " + task_project + "\r\n"
-                //                    + "TName: " + task_name + "\r\n"
-                //                    + "Ldate: " + task_date + "\r\n"
-                //                    + "TNotes: " + task_notes;
-                //            int duration = Toast.LENGTH_SHORT;
-                //            Toast toast = Toast.makeText(this, msg, duration);
-                //            toast.show();
-                //=====================================================================
-                taskBallList.add(taskBall);
+                tb_manager.addTaskBall(currentProjectIndex, taskBall);
                 cursor_projectlist.moveToNext();
-
-
             }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Void result){
             cursor_projectlist.close();
-            dbTask.close();
-
+            dbHelper.close();
             //Update view
             if (task_list_view != null) {
                 task_list_view.updateData();
-
-
             }
-        }
 
+            Log.d("Objects", tb_manager.getListList().toString());
+        }
     }
+
 }

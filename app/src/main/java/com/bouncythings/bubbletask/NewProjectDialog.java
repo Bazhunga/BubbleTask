@@ -22,6 +22,7 @@ public class NewProjectDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
+        final TaskBall_Manager taskball_manager = new TaskBall_Manager();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -38,13 +39,14 @@ public class NewProjectDialog extends DialogFragment {
                             JSONObject newProject = new JSONObject();
                             newProject.put("project", projectName);
                             ja.put(newProject);
-
                         }catch(JSONException e){
                             e.printStackTrace();
                         }
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString(getString(R.string.project_list_prefs), ja.toString());
                         editor.commit();
+                        taskball_manager.addProject_TaskBallList(projectName);
+
 
                         //Listen for the affirmation and pass that back to the activity
                         NewProjectDialogListener listener = (NewProjectDialogListener) getActivity();

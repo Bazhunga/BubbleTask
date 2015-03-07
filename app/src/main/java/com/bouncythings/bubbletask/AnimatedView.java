@@ -14,7 +14,8 @@ import java.util.ArrayList;
 */
 public class AnimatedView extends ImageView {
     //Grab TaskBall List data from main activity
-    ArrayList<TaskBall> tbList = HomeList.taskBallList;
+    TaskBall_Manager tbm = new TaskBall_Manager();
+    ArrayList<TaskBall> tbList = tbm.getProject_TaskBallList(HomeList.currentProjectIndex);
     int cp_index = HomeList.currentProjectIndex;
 
     private Context mContext;

@@ -21,28 +21,41 @@ public class TaskBall_Manager {
     4. Upon completing a task or deleting the task, remove the taskball
     5. Upon editing the task, remove and re-add the taskball
      */
-    public static ArrayList<TaskBall> TaskBall_List = new ArrayList<TaskBall>();
-    public static ArrayList<ArrayList<TaskBall>> TaskBall_ProjectList = new ArrayList<ArrayList<TaskBall>>();
+    private static ArrayList<ArrayList<TaskBall>> TaskBall_ProjectList = new ArrayList<ArrayList<TaskBall>>();
 
     public TaskBall_Manager(){}
 
-    public static ArrayList<TaskBall> getTaskBall_List() {
-        return TaskBall_List;
+    //Project-level operations
+    public static ArrayList<TaskBall> getProject_TaskBallList(int projectIndex) {
+        return TaskBall_ProjectList.get(projectIndex);
     }
 
-    public static void setTaskBall_List(ArrayList<TaskBall> taskBall_List) {
-        TaskBall_List = taskBall_List;
+    public static void addProject_TaskBallList(String projectName){
+        ArrayList<TaskBall> al = new ArrayList<TaskBall>();
+        TaskBall_ProjectList.add(al);
+    }
+    public static void removeProject_TaskBallList(int projectIndex){
+        TaskBall_ProjectList.remove(projectIndex);
     }
 
-    public static void addTaskBall(TaskBall tb ){
-        TaskBall_List.add(tb);
+    //TaskBall-level operation
+    public static TaskBall getTaskBall(int projectIndex, int taskBallIndex) {
+        return TaskBall_ProjectList.get(projectIndex).get(taskBallIndex);
     }
 
-    public static void clearTaskBallList(){
-        TaskBall_List.clear();
+    public static void addTaskBall(int projectIndex, TaskBall tb){
+        TaskBall_ProjectList.get(projectIndex).add(tb);
     }
-    public static void deleteProject(){
 
+    public static void clearAll(){
+        TaskBall_ProjectList.clear();
+    }
+    public static void clearProjectTasks(int projectIndex){
+        TaskBall_ProjectList.get(projectIndex).clear();
+    }
+
+    public static ArrayList<ArrayList<TaskBall>> getListList(){
+        return TaskBall_ProjectList;
     }
 
 }

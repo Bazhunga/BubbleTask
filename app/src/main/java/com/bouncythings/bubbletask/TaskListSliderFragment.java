@@ -24,7 +24,9 @@ public class TaskListSliderFragment extends Fragment {
                 R.layout.fragment_task_page, container, false);
         ListView swipe_listview = (ListView) rootView.findViewById(R.id.swipe_listView);
 
-        swipe_adapter = new TaskListSwipeAdapter(rootView.getContext(), HomeList.taskBallList);
+        TaskBall_Manager tbm = new TaskBall_Manager();
+
+        swipe_adapter = new TaskListSwipeAdapter(rootView.getContext(), tbm.getProject_TaskBallList(HomeList.currentProjectIndex));
         swipe_listview.setAdapter(swipe_adapter);
         swipe_listview.setDividerHeight(0);
         swipe_listview.setDivider(null);
