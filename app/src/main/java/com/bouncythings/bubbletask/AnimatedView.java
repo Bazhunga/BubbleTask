@@ -21,8 +21,6 @@ public class AnimatedView extends ImageView {
     private int xVelocity = 20;
     private int yVelocity = 10;
 
-
-
     // nts
     // Allows you to send and process (in this case) Runnable obj associated with thread's MessageQueue
     // Each handler instance associated with single thread and that thread's message queue

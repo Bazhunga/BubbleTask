@@ -34,7 +34,9 @@ import java.util.ArrayList;
 
 public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
     public ArrayList<String> projectList = new ArrayList<String>();
-    public static ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>(); 
+    public static ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
+
+    TaskBall_Manager taskball_manager = new TaskBall_Manager();
     public static int currentProjectIndex;
 
     TaskListSliderFragment task_list_view;
