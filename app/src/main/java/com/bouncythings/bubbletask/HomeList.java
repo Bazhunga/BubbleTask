@@ -98,6 +98,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new TaskListPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+        //mPager.setOffscreenPageLimit(2);
 
         currentProjectIndex = mPager.getCurrentItem();
 
