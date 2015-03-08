@@ -69,8 +69,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         //NTS: WOW YOU NEED THIS TO DISPLAY THE STUPID 3 LINES
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
 
         //Get all project names
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
@@ -193,6 +191,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
             mDbHelper.dropDatabase(dbTask);
             mDbHelper.createDatabase(dbTask);
+            new LoadDatabaseTasks_complete().execute();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -249,8 +248,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         }
                         currentProjectIndex--; //Since we've deleted a project, we move to the previous page in viewpager,
                                                //which is 1 less than the current project index
+                        taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                        lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
+                        lvTasks.setAdapter(lvTasksAdapter);
                         mDrawerAdapter.notifyDataSetChanged();
-
 
                     }
                 })
