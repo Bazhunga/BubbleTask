@@ -44,6 +44,12 @@ public class Homelist_Drawer_Adapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.homelist_drawer_element, null);
         }
 
+        if (position == HomeList.currentProjectIndex){
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.rich_red));
+        }
+        else{
+            convertView.setBackgroundColor(convertView.getResources().getColor(R.color.nav_drawer_grey));
+        }
         TextView tvProjectName = (TextView) convertView.findViewById(R.id.homelist_drawer_element_projectname);
 
         String szProjectName = data.get(position).substring(0,1).toUpperCase() + data.get(position).substring(1);

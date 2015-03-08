@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
@@ -24,6 +25,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.ikimuhendis.ldrawer.ActionBarDrawerToggle;
+import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +55,9 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     private ListView mDrawerList;
     private Homelist_Drawer_Adapter mDrawerAdapter;
 
+    private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerArrowDrawable mDrawerArrow;
+
     //HomeList to do tasks listview setup
     private ListView lvTasks;
     TaskListSwipeAdapter lvTasksAdapter;
@@ -59,6 +66,11 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_list);
+
+        //NTS: WOW YOU NEED THIS TO DISPLAY THE STUPID 3 LINES
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
 
         //Get all project names
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
@@ -108,6 +120,42 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+        mDrawerArrow = new DrawerArrowDrawable(this){
+            @Override
+            public boolean isLayoutRtl(){
+                return false;
+            }
+        };
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                R.drawable.ic_drawer,
+                R.string.drawer_open,
+                R.string.drawer_close){
+            public void onDrawerClosed(View view){
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+            public void onDrawerOpened(View drawerView){
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+            }
+        };
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 
@@ -126,12 +174,15 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                mDrawerLayout.closeDrawer(mDrawerList);
+            } else {
+                mDrawerLayout.openDrawer(mDrawerList);
+            }
+        }
         if (id == R.id.action_settings) {
             return true;
         }
@@ -142,9 +193,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
             mDbHelper.dropDatabase(dbTask);
             mDbHelper.createDatabase(dbTask);
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -226,12 +275,12 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
     @Override
     public void setTitle(CharSequence title) {
-        getActionBar().setTitle(title);
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
     public void onReturnValue(boolean projectCreated){
-        if (projectCreated == true) {
+        if (projectCreated) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
             String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
             JSONArray jsonArray = new JSONArray();
@@ -265,7 +314,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
             lvTasks.setAdapter(lvTasksAdapter);
             mDrawerLayout.closeDrawer(Gravity.LEFT);
-            Log.d("Drawer listener", "Position= " + position);
+            mDrawerAdapter.notifyDataSetChanged();
         }
     }
 

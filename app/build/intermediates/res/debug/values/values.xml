@@ -132,6 +132,11 @@
     <color name="primary_text_default_material_light">#de000000</color>
     <color name="primary_text_disabled_material_dark">#4Dffffff</color>
     <color name="primary_text_disabled_material_light">#39000000</color>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="rich_red">#9A2416</color>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <eat-comment/>
     <color name="ripple_material_dark">#40ffffff</color>
     <color name="ripple_material_light">#40000000</color>
     <color name="secondary_text_default_material_dark">#b3ffffff</color>
@@ -147,6 +152,7 @@
     <eat-comment/>
     <color name="translucent_blue">#800043E0</color>
     <color name="trash_red">#F02C00</color>
+    <color name="velvet_magenta">#D5235F</color>
     <color name="white">#fafafa</color>
     <color name="white_pressed">#f1f1f1</color>
     <declare-styleable name="ActionBar"><attr name="navigationMode"><enum name="normal" value="0"/><enum name="listMode" value="1"/><enum name="tabMode" value="2"/></attr><attr name="displayOptions"><flag name="none" value="0"/><flag name="useLogo" value="0x1"/><flag name="showHome" value="0x2"/><flag name="homeAsUp" value="0x4"/><flag name="showTitle" value="0x8"/><flag name="showCustom" value="0x10"/><flag name="disableHome" value="0x20"/></attr><attr name="title"/><attr format="string" name="subtitle"/><attr format="reference" name="titleTextStyle"/><attr format="reference" name="subtitleTextStyle"/><attr format="reference" name="icon"/><attr format="reference" name="logo"/><attr format="reference" name="divider"/><attr format="reference" name="background"/><attr format="reference|color" name="backgroundStacked"/><attr format="reference|color" name="backgroundSplit"/><attr format="reference" name="customNavigationLayout"/><attr name="height"/><attr format="reference" name="homeLayout"/><attr format="reference" name="progressBarStyle"/><attr format="reference" name="indeterminateProgressStyle"/><attr format="dimension" name="progressBarPadding"/><attr name="homeAsUpIndicator"/><attr format="dimension" name="itemPadding"/><attr format="boolean" name="hideOnContentScroll"/><attr format="dimension" name="contentInsetStart"/><attr format="dimension" name="contentInsetEnd"/><attr format="dimension" name="contentInsetLeft"/><attr format="dimension" name="contentInsetRight"/><attr format="dimension" name="elevation"/><attr format="reference" name="popupTheme"/></declare-styleable>
@@ -312,16 +318,24 @@
     <string name="create_new_project_tab">Create New Project Tab</string>
     <string name="create_new_task">Create New Task</string>
     <string name="done">Done</string>
+    <string name="drawer_close">drawer_close</string>
+    <string name="drawer_open">drawer_open</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_world">Hello world!</string>
     <string name="project_list_prefs">Projects_List</string>
     <string name="title_activity_animated__bubbles">Animated_Bubbles</string>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/styles.xml -->
     <eat-comment/>
+    <style name="ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+    </style>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
     </style>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
@@ -1077,6 +1091,13 @@
         <item name="android:scaleType">center</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/nav_drawer_grey</item>
+    </style>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <eat-comment/>
     <style name="Platform.AppCompat" parent="android:Theme">
         <item name="android:windowNoTitle">true</item>
         <item name="buttonBarStyle">@android:style/ButtonBar</item>
