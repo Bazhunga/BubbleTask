@@ -327,11 +327,16 @@
     <eat-comment/>
     <style name="ActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="drawerArrowStyle">@style/AppTheme.DrawerArrowToggle</item>
+        <item name="background">@color/nav_drawer_grey</item>
+
     </style>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:buttonStyle">@style/RobotoButtonStyle</item>
         <item name="android:actionBarStyle">@style/ActionBar</item>
+
+        <item name="actionBarStyle">@style/ActionBar</item>
+
         <!-- Customize your theme here. -->
     </style>
     <style name="AppTheme.DrawerArrowToggle" parent="Base.Widget.AppCompat.DrawerArrowToggle">
@@ -1091,13 +1096,6 @@
         <item name="android:scaleType">center</item>
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
-    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/styles.xml -->
-    <eat-comment/>
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/nav_drawer_grey</item>
-    </style>
-    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
-    <eat-comment/>
     <style name="Platform.AppCompat" parent="android:Theme">
         <item name="android:windowNoTitle">true</item>
         <item name="buttonBarStyle">@android:style/ButtonBar</item>

@@ -70,6 +70,9 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         //NTS: WOW YOU NEED THIS TO DISPLAY THE STUPID 3 LINES
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //NTS: Need this to display the title
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
         //Get all project names
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
         String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
@@ -89,6 +92,9 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         }
 
         currentProjectIndex = 0;
+        if (projectList != null){
+            setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
+        }
 
         //Getting Display size data
         Display display = getWindowManager().getDefaultDisplay();
@@ -336,6 +342,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             lvTasks.setAdapter(lvTasksAdapter);
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             mDrawerAdapter.notifyDataSetChanged();
+            setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
         }
     }
 
