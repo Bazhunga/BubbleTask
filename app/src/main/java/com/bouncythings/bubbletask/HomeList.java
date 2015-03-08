@@ -282,6 +282,12 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     Delete this from the database
     Call the database again to refresh the project tasks
      */
+//    public void deletetask(View view){
+//        TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
+//        SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
+//        String taskName = taskball_manager.getTaskBall(currentProjectIndex, )
+//        dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry.COLUMN_TASK_TITLE + "=" + )
+//    }
 
     //TODO: Check something off
     /*
