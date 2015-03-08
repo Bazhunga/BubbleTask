@@ -55,7 +55,10 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         if (daysUntil > 0){
             tv_t_duedate.setText("Due in " + Math.abs(daysUntil) + " days");
         }
-        else{
+        else if (daysUntil == 0){
+            tv_t_duedate.setText("Due today!");
+        }
+        else {
             tv_t_duedate.setText("Overdue by " + Math.abs(daysUntil) + " days");
         }
     }
