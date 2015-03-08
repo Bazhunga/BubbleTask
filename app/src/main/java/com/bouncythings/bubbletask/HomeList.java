@@ -264,6 +264,26 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 .show();
     }
 
+    //TODO: Edit Task
+    /*
+    Task is marked as need to edit
+    Launch the new task fragment and auto fill the information of the taskball
+     */
+
+    //TODO: Scrap Task
+    /*
+    Task is marked as not needed.
+    Delete this from the database
+    Call the database again to refresh the project tasks
+     */
+
+    //TODO: Check something off
+    /*
+    The task is marked as complete, the flag in database marking completion is checked.
+    Remove the task from the view
+    Call the database again to refresh the project tasks
+     */
+
     public void bubbleIt(View view){
         Intent startBubbles = new Intent(this, Animated_Bubbles.class);
         startActivity(startBubbles);
@@ -372,7 +392,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         long task_date;
                         String task_project, task_name, task_notes;
 
-                        //id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
+                        id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
                         task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
                         task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT));
                         task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
@@ -380,7 +400,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
                         task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
 
-                        TaskBall taskBall = new TaskBall(task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, ctxt);
+                        TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, ctxt);
 
                         tb_manager.addTaskBall(index, taskBall);
                         cursor_projectlist.moveToNext();
@@ -456,6 +476,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 long task_date;
                 String task_project, task_name, task_notes;
 
+                id = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry._ID));
                 task_name = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_TITLE));
                 task_project = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_PROJECT));
                 task_date = cursor_projectlist.getLong(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE));
@@ -463,7 +484,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 task_notes = cursor_projectlist.getString(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_DESC));
                 task_isCompleted = cursor_projectlist.getInt(cursor_projectlist.getColumnIndex(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT));
 
-                TaskBall taskBall = new TaskBall(task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, ctxt);
+                TaskBall taskBall = new TaskBall(id, task_name, task_project, task_date, task_priority, task_notes, task_isCompleted, ctxt);
 
                 tb_manager.addTaskBall(currentProjectIndex, taskBall);
                 cursor_projectlist.moveToNext();

@@ -63,8 +63,8 @@ public class TaskBall { //implements Parcelable{
     //Each ball will be different
 
 
-    public TaskBall(String taskName, String parentProject, long dueDate, int priority, String taskDesc, int isCompleted, Context c) {
-        //this.taskid = taskid;
+    public TaskBall(int id, String taskName, String parentProject, long dueDate, int priority, String taskDesc, int isCompleted, Context c) {
+        this.taskid = taskid;
         this.taskName = taskName;
         setTaskName_truncated(taskName);
         this.parentProject = parentProject;
