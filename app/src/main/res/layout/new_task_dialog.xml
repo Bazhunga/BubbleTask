@@ -51,7 +51,6 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:id="@+id/wrench"
                     android:src="@drawable/task_name"
                     android:layout_weight="0.1"/>
@@ -61,7 +60,6 @@
                     android:layout_height="wrap_content"
                     android:hint="Task Name"
                     android:textCursorDrawable="@drawable/text_cursor_pink"
-                    android:layout_centerVertical="true"
                     app:baseColor="@color/black"
                     app:hideUnderline="true"
                     android:id="@+id/task_entry"
@@ -86,7 +84,6 @@
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:id="@+id/parent"
                     android:src="@drawable/parent_icon2"
                     android:layout_weight="0.1"/>

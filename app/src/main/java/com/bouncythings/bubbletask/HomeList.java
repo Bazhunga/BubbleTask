@@ -9,23 +9,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
-
-import com.astuetz.PagerSlidingTabStrip;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,42 +39,28 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     TaskBall_Manager taskball_manager = new TaskBall_Manager();
     public static int currentProjectIndex;
 
-    TaskListSliderFragment task_list_view;
-
-
     Context ctxt = this;
-    boolean refreshFlag = false;
 
     //Used to draw circles for bubble visualization
     public static int maxWidth;
     public static int maxHeight;
 
 
+    //Navigation drawer variables
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private Homelist_Drawer_Adapter mDrawerAdapter;
 
-    /**
-     * The number of pages (wizard steps) to show in this demo.
-     */
-    private static final int NUM_PAGES = 5;
-
-    /**
-     * The pager widget, which handles animation and allows swiping horizontally to access previous
-     * and next wizard steps.
-     */
-    private ViewPager mPager;
-
-    /**
-     * The pager adapter, which provides the pages to the view pager widget.
-     */
-    private PagerAdapter mPagerAdapter;
-
-    PagerSlidingTabStrip tabs;
+    //HomeList to do tasks listview setup
+    private ListView lvTasks;
+    TaskListSwipeAdapter lvTasksAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_list);
 
-        //Setup Tab Strip Content
+        //Get all project names
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
         String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
         JSONArray jsonArray = new JSONArray();
@@ -94,13 +78,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             e.printStackTrace();
         }
 
-        // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPagerAdapter = new TaskListPagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
-        //mPager.setOffscreenPageLimit(2);
-
-        currentProjectIndex = mPager.getCurrentItem();
+        currentProjectIndex = 0;
 
         //Getting Display size data
         Display display = getWindowManager().getDefaultDisplay();
@@ -108,31 +86,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         display.getSize(size);
         maxWidth = size.x;
         maxHeight = size.y;
-
-        // Bind the tabs to the ViewPager
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(mPager);
-        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                currentProjectIndex = mPager.getCurrentItem();
-                if (task_list_view != null){
-                    task_list_view.switchFragments();
-                }
-
-                //readDatabase();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         //DATABASING
         TaskDbHelper mDbHelper = new TaskDbHelper(this);
@@ -142,47 +95,25 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         //readDatabase(); //Read the database
         new LoadDatabaseTasks_complete().execute();
 
-        //Set Up ListView
+
+        //Setup the navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.homelist_drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.homelist_left_drawer);
+        mDrawerAdapter = new Homelist_Drawer_Adapter(this, projectList);
+
+        mDrawerList.setAdapter(mDrawerAdapter);
+        mDrawerList.setDividerHeight(1);
+        ColorDrawable div_color = new ColorDrawable(this.getResources().getColor(R.color.black));
+        mDrawerList.setDivider(div_color);
+
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
     }
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    public class TaskListPagerAdapter extends FragmentStatePagerAdapter {
-        //FragmentManager fman;
-        public TaskListPagerAdapter(FragmentManager fm) {
-            super(fm);
-            //fman = fm;
-        }
 
-        @Override
-        public CharSequence getPageTitle(int position){
-            return projectList.get(position);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            task_list_view = new TaskListSliderFragment();
-            return task_list_view;
-        }
-
-        @Override
-        public int getCount() {
-            return projectList.size();
-        }
-    }
 
     @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-        } else {
-            // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-        }
+
     }
 
 
@@ -269,7 +200,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         }
                         currentProjectIndex--; //Since we've deleted a project, we move to the previous page in viewpager,
                                                //which is 1 less than the current project index
-                        mPagerAdapter.notifyDataSetChanged();
+                        mDrawerAdapter.notifyDataSetChanged();
 
 
                     }
@@ -286,6 +217,16 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     public void bubbleIt(View view){
         Intent startBubbles = new Intent(this, Animated_Bubbles.class);
         startActivity(startBubbles);
+    }
+
+    public void refreshProjectTasks(){
+        new LoadProjectTasks().execute();
+
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        getActionBar().setTitle(title);
     }
 
     @Override
@@ -306,17 +247,28 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mPagerAdapter.notifyDataSetChanged();
+            mDrawerAdapter.notifyDataSetChanged();
         }
     }
 
+    //Update the listview on click of element in the navbar
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            currentProjectIndex = position;
+            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
 
-
-
-    public void refreshProjectTasks(){
-        new LoadProjectTasks().execute();
-
+            //NTS: You have to set a different adapter. Just notifying doens't do anything
+            //because it updates stuff for one particular project only.
+            //Once you move to a different project via click, you need to set a different adapter so
+            //it listens to the new projectg
+            lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
+            lvTasks.setAdapter(lvTasksAdapter);
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
+            Log.d("Drawer listener", "Position= " + position);
+        }
     }
+
     public class LoadDatabaseTasks_complete extends AsyncTask<Void, Void, Void> {
         TaskDbHelper dbHelper;
         Cursor cursor_projectlist;
@@ -396,12 +348,14 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         protected void onPostExecute(Void result){
             cursor_projectlist.close();
             dbHelper.close();
-            //Update view
-            if (task_list_view != null) {
-                task_list_view.switchFragments();
-            }
-
-            Log.d("Objects", tb_manager.getListList().toString());
+            //Setup the listview for the homelist
+            lvTasks = (ListView) findViewById(R.id.todo_tasks);
+            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+            lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
+            lvTasks.setAdapter(lvTasksAdapter);
+            mDrawerList.setDividerHeight(1);
+            ColorDrawable div_color = new ColorDrawable(ctxt.getResources().getColor(R.color.black));
+            mDrawerList.setDivider(div_color);
         }
     }
 
@@ -472,9 +426,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             cursor_projectlist.close();
             dbHelper.close();
             //Update view
-            if (task_list_view != null) {
-                task_list_view.switchFragments();
-            }
+            lvTasksAdapter.notifyDataSetChanged();
 
             Log.d("Objects", tb_manager.getListList().toString());
         }

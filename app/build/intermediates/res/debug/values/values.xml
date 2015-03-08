@@ -102,6 +102,11 @@
     <color name="highlighted_text_material_light">#66009688</color>
     <color name="hint_foreground_material_dark">@color/bright_foreground_disabled_material_dark</color>
     <color name="hint_foreground_material_light">@color/bright_foreground_disabled_material_light</color>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.ikimuhendis/ldrawer/0.1/res/values/values.xml -->
+    <eat-comment/>
+    <color name="ldrawer_color">#FFFFFF</color>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
+    <eat-comment/>
     <color name="link_text_material_dark">@color/material_deep_teal_200</color>
     <color name="link_text_material_light">@color/material_deep_teal_500</color>
     <color name="material_blue_grey_800">#ff37474f</color>
@@ -112,6 +117,7 @@
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="matte_blue">#6699FF</color>
+    <color name="nav_drawer_grey">#303030</color>
     <color name="orange">#F59733</color>
     <color name="orange_pressed">#DB882E</color>
     <color name="pink">#e91e63</color>
@@ -256,6 +262,14 @@
     <dimen name="inner_components_spacing">8dp</dimen>
     <dimen name="inner_padding_left">0dp</dimen>
     <dimen name="inner_padding_right">0dp</dimen>
+    <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.ikimuhendis/ldrawer/0.1/res/values/values.xml -->
+    <eat-comment/>
+    <dimen name="ldrawer_barSize">18dp</dimen>
+    <dimen name="ldrawer_drawableSize">50dp</dimen>
+    <dimen name="ldrawer_gapBetweenBars">3dp</dimen>
+    <dimen name="ldrawer_middleBarArrowSize">16dp</dimen>
+    <dimen name="ldrawer_thickness">2dp</dimen>
+    <dimen name="ldrawer_topBottomBarArrowSize">11dp</dimen>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
     <item name="action_bar_activity_content" type="id"/>
