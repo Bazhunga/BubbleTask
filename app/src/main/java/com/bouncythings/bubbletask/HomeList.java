@@ -92,7 +92,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         }
 
         currentProjectIndex = 0;
-        if (projectList != null){
+        if (projectList != null && projectList.size() > 0){
             setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
         }
 
@@ -252,9 +252,21 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         } catch (JSONException e){
                             e.printStackTrace();
                         }
-                        currentProjectIndex--; //Since we've deleted a project, we move to the previous page in viewpager,
-                                               //which is 1 less than the current project index
-                        taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                        if (currentProjectIndex >= projectList.size() && projectList.size() != 0) {
+                            //Case of deleting the last element
+                            currentProjectIndex--;
+                            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                            setTitle(projectList.get(currentProjectIndex));
+                        }
+                        else if (projectList.size() == 0){
+                            currentProjectIndex = 0;
+                            taskBallList = new ArrayList<>();
+                            setTitle("");
+                        }
+                        else{
+                            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                            setTitle(projectList.get(currentProjectIndex));
+                        }
                         lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
                         lvTasks.setAdapter(lvTasksAdapter);
                         mDrawerAdapter.notifyDataSetChanged();
@@ -330,6 +342,14 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 e.printStackTrace();
             }
             mDrawerAdapter.notifyDataSetChanged();
+            if (projectList.size() == 1) {
+                //Freshly created
+                setTitle(projectList.get(currentProjectIndex));
+                taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
+                lvTasks.setAdapter(lvTasksAdapter);
+                mDrawerAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -429,16 +449,25 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         @Override
         protected void onPostExecute(Void result){
-            cursor_projectlist.close();
-            dbHelper.close();
+            if (projectList.size() != 0) {
+                cursor_projectlist.close();
+                dbHelper.close();
+            }
             //Setup the listview for the homelist
             lvTasks = (ListView) findViewById(R.id.todo_tasks);
-            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+
+            if (projectList.size() != 0){
+                taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+            }
+            else{
+                taskBallList = new ArrayList<TaskBall>();
+            }
             lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
             lvTasks.setAdapter(lvTasksAdapter);
             mDrawerList.setDividerHeight(1);
             ColorDrawable div_color = new ColorDrawable(ctxt.getResources().getColor(R.color.black));
             mDrawerList.setDivider(div_color);
+
         }
     }
 
