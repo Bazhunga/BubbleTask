@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.daimajia.swipe.SwipeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="80dp"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:id="@+id/swipe_element">
     <!-- Bottom View Start-->
     <LinearLayout
@@ -43,23 +43,24 @@
         android:padding="3dp"
         android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <!--What you want to show in SurfaceView-->
 
 
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView"
-            android:background="@color/fbutton_color_alizarin"
-            android:layout_weight="0.15"
+            android:layout_height="78dp"
+            android:id="@+id/t_elem_bars"
+            android:layout_weight="0.20"
+            android:src="@drawable/b10"
+            android:paddingRight="7dp"
             />
 
         <RelativeLayout
             android:layout_width="0dp"
             android:padding="10dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.85">
+            android:layout_height="wrap_content"
+            android:layout_weight="0.80">
 
 
             <TextView

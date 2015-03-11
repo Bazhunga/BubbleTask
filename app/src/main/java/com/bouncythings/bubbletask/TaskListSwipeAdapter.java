@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
@@ -41,6 +42,7 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         TextView tv_t_name = (TextView)convertView.findViewById(R.id.t_elem_name);
         TextView tv_t_desc = (TextView)convertView.findViewById(R.id.t_elem_desc);
         TextView tv_t_duedate = (TextView)convertView.findViewById(R.id.t_elem_deadline);
+        ImageView iv_t_bars = (ImageView)convertView.findViewById(R.id.t_elem_bars);
 
         TaskBall currentTask = data.get(position);
         String s_t_name = currentTask.getTaskName();
@@ -60,6 +62,32 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         }
         else {
             tv_t_duedate.setText("Overdue by " + Math.abs(daysUntil) + " days");
+        }
+
+        int priority = currentTask.getPriority();
+        switch (priority){
+            case 1: iv_t_bars.setImageResource(R.drawable.b1);
+                break;
+            case 2: iv_t_bars.setImageResource(R.drawable.b2);
+                break;
+            case 3: iv_t_bars.setImageResource(R.drawable.b3);
+                break;
+            case 4: iv_t_bars.setImageResource(R.drawable.b4);
+                break;
+            case 5: iv_t_bars.setImageResource(R.drawable.b5);
+                break;
+            case 6: iv_t_bars.setImageResource(R.drawable.b6);
+                break;
+            case 7: iv_t_bars.setImageResource(R.drawable.b7);
+                break;
+            case 8: iv_t_bars.setImageResource(R.drawable.b8);
+                break;
+            case 9: iv_t_bars.setImageResource(R.drawable.b9);
+                break;
+            case 10: iv_t_bars.setImageResource(R.drawable.b10);
+                break;
+            default: break;
+
         }
     }
 
