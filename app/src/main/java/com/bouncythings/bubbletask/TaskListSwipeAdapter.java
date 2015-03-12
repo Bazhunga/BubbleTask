@@ -1,6 +1,10 @@
 package com.bouncythings.bubbletask;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +13,8 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -37,12 +41,66 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
     }
 
     @Override
-    public void fillValues(int position, View convertView) {
+    public void fillValues(final int position, View convertView) {
 
         TextView tv_t_name = (TextView)convertView.findViewById(R.id.t_elem_name);
         TextView tv_t_desc = (TextView)convertView.findViewById(R.id.t_elem_desc);
         TextView tv_t_duedate = (TextView)convertView.findViewById(R.id.t_elem_deadline);
         ImageView iv_t_bars = (ImageView)convertView.findViewById(R.id.t_elem_bars);
+
+        ImageView iv_edit = (ImageView)convertView.findViewById(R.id.edit);
+        ImageView iv_trash = (ImageView)convertView.findViewById(R.id.trash);
+        ImageView iv_done = (ImageView)convertView.findViewById(R.id.done);
+
+        //Set Listeners
+        iv_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Edit", "this: " + position);
+
+            }
+        });
+        iv_trash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(mContext)
+                        .setTitle("Delete Entry")
+                        .setMessage("Are you sure you want to delete this entry?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                int id;
+                                TaskBall_Manager tbm = new TaskBall_Manager();
+                                TaskBall tb = tbm.getTaskBall(HomeList.currentProjectIndex, position);
+                                id = tb.getTaskid();
+                                Log.d("Trash", "Id: " + id);
+                                TaskDbHelper dbHelper = new TaskDbHelper(mContext);
+                                SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
+                                String selection = TaskContract.TaskEntry._ID + " LIKE ?";
+                                String[] selectionArgs = {String.valueOf(id)};
+                                dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+                                ((HomeList)mContext).refreshProjectTasks(); //Calls the activity method to refresh things.
+
+                                //TODO: Update the listview so that everything becomes closed again
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+        iv_done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("done", "this: " + position);
+            }
+        });
+
+
 
         TaskBall currentTask = data.get(position);
         String s_t_name = currentTask.getTaskName();
@@ -89,6 +147,8 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
             default: break;
 
         }
+
+
     }
 
     @Override

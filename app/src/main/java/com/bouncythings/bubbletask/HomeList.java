@@ -62,6 +62,9 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     private ListView lvTasks;
     TaskListSwipeAdapter lvTasksAdapter;
 
+    //For Editing and Deleting of Tasks
+    private int mDownPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +151,18 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
+//        //Setup swipe button listeners
+//        SwipeLayout sl_task_element = (SwipeLayout)findViewById(R.id.swipe_element);
+//        sl_task_element.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                mDownPosition = lvTasks.getPositionForView(v);
+//                Log.d("POSITION", "is " + mDownPosition);
+//                return false;
+//            }
+//        });
+
+
     }
 
     @Override
@@ -160,12 +175,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-
     }
 
 
@@ -269,6 +278,13 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         }
                         lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
                         lvTasks.setAdapter(lvTasksAdapter);
+//                        lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+//                            @Override
+//                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                                ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
+//                                Log.d("Position: ", "is " + position);
+//                            }
+//                        });
                         mDrawerAdapter.notifyDataSetChanged();
 
                     }
@@ -282,31 +298,40 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 .show();
     }
 
-    //TODO: Edit Task
-    /*
-    Task is marked as need to edit
-    Launch the new task fragment and auto fill the information of the taskball
-     */
-
-    //TODO: Scrap Task
-    /*
-    Task is marked as not needed.
-    Delete this from the database
-    Call the database again to refresh the project tasks
-     */
-//    public void deletetask(View view){
-//        TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
-//        SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
-//        String taskName = taskball_manager.getTaskBall(currentProjectIndex, )
-//        dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry.COLUMN_TASK_TITLE + "=" + )
+//    //TODO: Edit Task
+//    /*
+//    Task is marked as need to edit
+//    Launch the new task fragment and auto fill the information of the taskball
+//     */
+//    public void editTask(View view){
+//        Log.d("Edit", "Text");
 //    }
+//
+//    //TODO: Scrap Task
+//    /*
+//    Task is marked as not needed.
+//    Delete this from the database
+//    Call the database again to refresh the project tasks
+//     */
+//    public void deleteTask(View view){
+////        TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
+////        SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
+////        String taskName = taskball_manager.getTaskBall(currentProjectIndex, )
+////        dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry.COLUMN_TASK_TITLE + "=" + )
+//        Log.d("Delete", "Task");
+//
+//    }
+//
+//    //TODO: Check something off
+//    /*
+//    The task is marked as complete, the flag in database marking completion is checked.
+//    Remove the task from the view
+//    Call the database again to refresh the project tasks
+//     */
 
-    //TODO: Check something off
-    /*
-    The task is marked as complete, the flag in database marking completion is checked.
-    Remove the task from the view
-    Call the database again to refresh the project tasks
-     */
+    public void markAsComplete(View view){
+        Log.d("Mark", "As Complete");
+    }
 
     public void bubbleIt(View view){
         Intent startBubbles = new Intent(this, Animated_Bubbles.class);
@@ -348,6 +373,13 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 taskBallList = taskball_manager.getListList().get(currentProjectIndex);
                 lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
                 lvTasks.setAdapter(lvTasksAdapter);
+//                lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
+//                        Log.d("Position: ", "is " + position);
+//                    }
+//                });
                 mDrawerAdapter.notifyDataSetChanged();
             }
         }
@@ -366,6 +398,13 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             //it listens to the new projectg
             lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
             lvTasks.setAdapter(lvTasksAdapter);
+//            lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
+//                    Log.d("Position: ", "is " + position);
+//                }
+//            });
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             mDrawerAdapter.notifyDataSetChanged();
             setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
@@ -464,9 +503,17 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             }
             lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
             lvTasks.setAdapter(lvTasksAdapter);
+//            (new AdapterView.OnItemClickListener(){
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                    ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
+//                    Log.d("Position: ", "is " + position);
+//                }
+//            });
             mDrawerList.setDividerHeight(1);
             ColorDrawable div_color = new ColorDrawable(ctxt.getResources().getColor(R.color.black));
             mDrawerList.setDivider(div_color);
+
 
         }
     }

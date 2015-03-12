@@ -11,28 +11,33 @@
         android:weightSum="1"
         android:layout_height="match_parent">
 
-        <TextView
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:background="@color/edit_yellow"
             android:layout_weight="0.33"
-            android:id="@+id/edit" />
-        <TextView
+            android:id="@+id/edit"
+            android:clickable="true"
+            android:onClick="editTask"/>
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:background="@color/trash_red"
             android:layout_weight="0.33"
-
-            android:id="@+id/trash" />
-        <TextView
+            android:id="@+id/trash"
+            android:clickable="true"
+            android:onClick="deleteTask"/>
+        <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:background="@color/completed_green"
             android:layout_weight="0.33"
-            android:id="@+id/done" />
+            android:id="@+id/done"
+            android:clickable="true"
+            android:onClick="markAsComplete"/>
 
         <!--What you want to show-->
     </LinearLayout>

@@ -64,7 +64,7 @@ public class TaskBall { //implements Parcelable{
 
 
     public TaskBall(int id, String taskName, String parentProject, long dueDate, int priority, String taskDesc, int isCompleted, Context c) {
-        this.taskid = taskid;
+        this.taskid = id;
         this.taskName = taskName;
         setTaskName_truncated(taskName);
         this.parentProject = parentProject;
@@ -80,6 +80,7 @@ public class TaskBall { //implements Parcelable{
         setPreviouslyWallTouching(false);
         setTextSize();
     }
+
 
     public int getTextSize() {
         return textSize;
@@ -104,10 +105,6 @@ public class TaskBall { //implements Parcelable{
 
     public int getTaskid() {
         return taskid;
-    }
-
-    public void setTaskid(int taskid) {
-        this.taskid = taskid;
     }
 
     public String getTaskName() {
