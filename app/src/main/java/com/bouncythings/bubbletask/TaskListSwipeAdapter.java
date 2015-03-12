@@ -1,14 +1,17 @@
 package com.bouncythings.bubbletask;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
@@ -43,6 +46,16 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
     @Override
     public void fillValues(final int position, View convertView) {
 
+        TaskBall currentTask = data.get(position);
+        String s_t_name = currentTask.getTaskName();
+        String s_t_desc = currentTask.getTaskDesc();
+        long l_t_deadline = currentTask.getDueDate();
+        Date date = new Date();
+        long currentDate = date.getTime();
+        long daysUntil = (l_t_deadline - currentDate) / (1000*60*60*24);
+        int completed_stat = currentTask.isCompleted(); //1 or 0 (complete/incomplete)
+
+
         TextView tv_t_name = (TextView)convertView.findViewById(R.id.t_elem_name);
         TextView tv_t_desc = (TextView)convertView.findViewById(R.id.t_elem_desc);
         TextView tv_t_duedate = (TextView)convertView.findViewById(R.id.t_elem_deadline);
@@ -51,6 +64,7 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         ImageView iv_edit = (ImageView)convertView.findViewById(R.id.edit);
         ImageView iv_trash = (ImageView)convertView.findViewById(R.id.trash);
         ImageView iv_done = (ImageView)convertView.findViewById(R.id.done);
+        LinearLayout ll_element = (LinearLayout)convertView.findViewById(R.id.surface_view);
 
         //Set Listeners
         iv_edit.setOnClickListener(new View.OnClickListener() {
@@ -97,30 +111,47 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
             @Override
             public void onClick(View v) {
                 Log.d("done", "this: " + position);
+                TaskDbHelper dbHelper = new TaskDbHelper(mContext);
+                SQLiteDatabase dbTask = dbHelper.getReadableDatabase();
+
+                int id;
+                TaskBall_Manager tbm = new TaskBall_Manager();
+                TaskBall tb = tbm.getTaskBall(HomeList.currentProjectIndex, position);
+                id = tb.getTaskid();
+                ContentValues value = new ContentValues();
+                //Set the completion stat to 1 means that it has been completed
+                value.put(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT, 1);
+                String selection = TaskContract.TaskEntry._ID + " LIKE ?";
+                String [] selectionArgs = {String.valueOf(id)};
+
+                dbTask.update(TaskContract.TaskEntry.TABLE_NAME, value, selection, selectionArgs);
+                ((HomeList)mContext).refreshProjectTasks(); //Calls the activity method to refresh things.
             }
         });
 
-
-
-        TaskBall currentTask = data.get(position);
-        String s_t_name = currentTask.getTaskName();
-        String s_t_desc = currentTask.getTaskDesc();
-        long l_t_deadline = currentTask.getDueDate();
-        Date date = new Date();
-        long currentDate = date.getTime();
-        long daysUntil = (l_t_deadline - currentDate) / (1000*60*60*24);
+        if (completed_stat == 1){
+            ll_element.setBackgroundColor(mContext.getResources().getColor(R.color.completed_bg_green));
+            tv_t_duedate.setText("Completed!");
+            iv_t_bars.setVisibility(View.GONE);
+            tv_t_desc.setVisibility(View.GONE);
+            tv_t_name.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+            tv_t_duedate.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+        }
+        else{
+            if (daysUntil > 0){
+                tv_t_duedate.setText("Due in " + Math.abs(daysUntil) + " days");
+            }
+            else if (daysUntil == 0){
+                tv_t_duedate.setText("Due today!");
+            }
+            else {
+                tv_t_duedate.setText("Overdue by " + Math.abs(daysUntil) + " days");
+            }
+        }
 
         tv_t_name.setText(s_t_name);
         tv_t_desc.setText(s_t_desc);
-        if (daysUntil > 0){
-            tv_t_duedate.setText("Due in " + Math.abs(daysUntil) + " days");
-        }
-        else if (daysUntil == 0){
-            tv_t_duedate.setText("Due today!");
-        }
-        else {
-            tv_t_duedate.setText("Overdue by " + Math.abs(daysUntil) + " days");
-        }
+
 
         int priority = currentTask.getPriority();
         switch (priority){

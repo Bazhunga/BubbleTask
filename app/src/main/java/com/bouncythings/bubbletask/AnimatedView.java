@@ -67,12 +67,14 @@ public class AnimatedView extends ImageView {
 
         for (int i = 0; i < tbList.size(); i++ ){
             tb = tbList.get(i);
-            tb.getCirc().draw(c);
-            //Draw the corresponding text
-            textCentre = tb.getCentre(); //Only use the y component
-            textX = tb.getLeftX();
-            paint.setTextSize(tb.getTextSize());
-            c.drawText(tb.getTaskName_truncated(), textCentre[0], textCentre[1], paint);
+            if (tb.isCompleted() != 1) { //Do not bother drawing the taskball that has been completed
+                tb.getCirc().draw(c);
+                //Draw the corresponding text
+                textCentre = tb.getCentre(); //Only use the y component
+                textX = tb.getLeftX();
+                paint.setTextSize(tb.getTextSize());
+                c.drawText(tb.getTaskName_truncated(), textCentre[0], textCentre[1], paint);
+            }
         }
 
 

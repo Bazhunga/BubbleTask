@@ -48,7 +48,8 @@
         android:padding="3dp"
         android:background="#ffffff"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/surface_view">
         <!--What you want to show in SurfaceView-->
 
 

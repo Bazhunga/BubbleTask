@@ -21,6 +21,7 @@
     <color name="nav_drawer_grey">#303030</color>
     <color name="velvet_magenta">#D5235F</color>
     <color name="rich_red">#9A2416</color>
+    <color name="completed_bg_green">#302aff00</color>
     <color name="fbutton_color_turquoise">#1abc9c</color>
     <color name="fbutton_color_green_sea">#16a085</color>
     <color name="fbutton_color_emerald">#2ecc71</color>

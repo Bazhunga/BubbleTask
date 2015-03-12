@@ -254,7 +254,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                             String[] selectionArgs = {String.valueOf(id)};
                             dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
                         }
-                        
+
                         //Reset the projectList and populate it again
                         projectList.remove(currentProjectIndex);
                         //Remove the project from the static project_list
@@ -406,7 +406,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
                 //Select everything in the database where the project name matches the current focused page
 
-                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," + TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " DESC";
                 String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
 
                 for (int index = 0; index < projectList.size(); index++) {

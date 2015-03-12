@@ -49,6 +49,7 @@
     <color name="button_material_light">#ffd6d7d7</color>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/values/colors.xml -->
     <eat-comment/>
+    <color name="completed_bg_green">#302aff00</color>
     <color name="completed_green">#00F020</color>
     <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/res/values/values.xml -->
     <eat-comment/>
