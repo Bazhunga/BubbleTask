@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 
 public class HomeList extends ActionBarActivity implements NewProjectDialog.NewProjectDialogListener {
-    public ArrayList<String> projectList = new ArrayList<String>();
+    public static ArrayList<String> projectList = new ArrayList<String>();
     public static ArrayList<TaskBall> taskBallList = new ArrayList<TaskBall>();
 
     TaskBall_Manager taskball_manager = new TaskBall_Manager();
@@ -221,6 +221,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         Bundle data = new Bundle();
         data.putStringArrayList("project_list", projectList);
         data.putInt("current_project_index", currentProjectIndex);
+        data.putString("new_old", "new");
         dialog.setArguments(data);
         dialog.show(getFragmentManager(), "NewTaskDialog");
 
@@ -549,7 +550,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             cursor_projectlist.close();
             dbHelper.close();
             //Update view
-            lvTasksAdapter.notifyDataSetChanged();
+            lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
+            lvTasks.setAdapter(lvTasksAdapter);
 
             Log.d("Objects", tb_manager.getListList().toString());
         }

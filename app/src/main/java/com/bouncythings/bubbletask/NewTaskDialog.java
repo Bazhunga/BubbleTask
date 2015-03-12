@@ -31,7 +31,7 @@ public class NewTaskDialog extends DialogFragment{
     String szTaskNotes;
 
     int iPriority;     //Priority is 1-10
-    long iDueDate;     //Store the due date in milliseconds
+    long lDueDate;     //Store the due date in milliseconds
 
     final DateFormat mdy = new SimpleDateFormat("MMMMMMMM dd, yyyy");
     View rootView;
@@ -61,11 +61,8 @@ public class NewTaskDialog extends DialogFragment{
         String todayDate = mdy.format(date);
         dateChosen.setText(todayDate);
 
-        //Variable initialization
-        iPriority = 1;
-        iDueDate = System.currentTimeMillis();
-        szTaskName = "";
-        szProjectName = sp_project.getSelectedItem().toString();
+        //Is this a new task or is it being edited?
+        String new_old_creation = getArguments().getString("new_old");
 
         final FButton date_picker_button = (FButton) rootView.findViewById(R.id.datePickerButton);
 
@@ -78,16 +75,12 @@ public class NewTaskDialog extends DialogFragment{
             }
         });
 
-        //Must declare the view so that the buttons can be accessed (like the priority slider)
-        tv_priority.setText("Priority: 1");
-        final Slider prioritySlider = (Slider) rootView.findViewById(R.id.priority_slider);
-        tv_priority.setText(Html.fromHtml("Priority: " + "<b><big> <font color='#c700ff'>1</font></big></b>"));
-
         //You can find the Slider file defined in
         //https://github.com/navasmdc/MaterialDesignLibrary/blob/master/MaterialDesign/src/com/gc/materialdesign/views/Slider.java
         //You'll see that you can setOnValueChangedListener and then pass in an OnValueChangeListener
         //NTS: OnValueChangeListener implements the function onValueChanged, so when you create a
         //new listener object, you have to implement the onValueChanged function
+        final Slider prioritySlider = (Slider) rootView.findViewById(R.id.priority_slider);
         prioritySlider.setOnValueChangedListener(new Slider.OnValueChangedListener() {
             @Override
             public void onValueChanged(int i) {
@@ -95,15 +88,25 @@ public class NewTaskDialog extends DialogFragment{
             }
         });
 
-        builder.setView(rootView)
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        iPriority = prioritySlider.getValue();
-                        //iDueDate is automatically updated on dialog return
-                        szProjectName = sp_project.getSelectedItem().toString();
-                        szTaskName = taskName.getText().toString();
-                        szTaskNotes = taskNotes.getText().toString();
+        if (new_old_creation.equals("new")) {
+            //Variable initialization
+            iPriority = 1;
+            lDueDate = System.currentTimeMillis();
+            szTaskName = "";
+            szProjectName = sp_project.getSelectedItem().toString();
+
+            //Must declare the view so that the buttons can be accessed (like the priority slider)
+            tv_priority.setText(Html.fromHtml("Priority: " + "<b><big> <font color='#c700ff'>1</font></big></b>"));
+
+            builder.setView(rootView)
+                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            iPriority = prioritySlider.getValue();
+                            //iDueDate is automatically updated on dialog return
+                            szProjectName = sp_project.getSelectedItem().toString();
+                            szTaskName = taskName.getText().toString();
+                            szTaskNotes = taskNotes.getText().toString();
 
 //                        CharSequence msg = "Priority: " + String.valueOf(iPriority) + "\r\n"
 //                                            + "PName: " + szProjectName + "\r\n"
@@ -114,36 +117,95 @@ public class NewTaskDialog extends DialogFragment{
 //                        Toast toast = Toast.makeText(rootView.getContext(), msg, duration);
 //                        toast.show();
 
-                        //Instantiate the database to put information into it
-                        TaskDbHelper mDbHelper = new TaskDbHelper(rootView.getContext());
-                        SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
+                            //Instantiate the database to put information into it
+                            TaskDbHelper mDbHelper = new TaskDbHelper(rootView.getContext());
+                            SQLiteDatabase dbTask = mDbHelper.getWritableDatabase();
 
-                        //Map the values you want to put in
-                        ContentValues values = new ContentValues();
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_PROJECT, szProjectName);
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_TITLE, szTaskName);
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_DESC, szTaskNotes);
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, iPriority);
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE, iDueDate);
-                        values.put(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT, 0);
-                        long newRowId;
-                        newRowId = dbTask.insert(
-                                TaskContract.TaskEntry.TABLE_NAME,
-                                TaskContract.TaskEntry.COLUMN_NAME_NULLABLE,
-                                values);
+                            //Map the values you want to put in
+                            ContentValues values = new ContentValues();
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_PROJECT, szProjectName);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_TITLE, szTaskName);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_DESC, szTaskNotes);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, iPriority);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE, lDueDate);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT, 0);
+                            long newRowId;
+                            newRowId = dbTask.insert(
+                                    TaskContract.TaskEntry.TABLE_NAME,
+                                    TaskContract.TaskEntry.COLUMN_NAME_NULLABLE,
+                                    values);
 
-                        //Call HomeList activity to refresh the list
-                        //Test this buy creating a project, adding a task and executing Bubble It!
-                        //If the project has been refreshed then bubbles appear
-                        ((HomeList)getActivity()).refreshProjectTasks();
+                            //Call HomeList activity to refresh the list
+                            //Test this buy creating a project, adding a task and executing Bubble It!
+                            //If the project has been refreshed then bubbles appear
+                            ((HomeList) getActivity()).refreshProjectTasks();
 
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-                    }
-                });
+                        }
+                    });
+        }
+        else if (new_old_creation.equals("edit")){
+            //Variable initialization
+            szTaskName = getArguments().getString("taskname");
+            szProjectName = sp_project.getSelectedItem().toString(); //Unused
+            lDueDate = getArguments().getLong("deadline");
+            iPriority = getArguments().getInt("priority");
+            szTaskNotes = getArguments().getString("taskdesc");
+            final int iID = getArguments().getInt("dbentryid");
+
+            prioritySlider.setValue(iPriority);
+            tv_priority.setText(Html.fromHtml("Priority: " + "<b><big> <font color='#c700ff'>" + String.valueOf(iPriority) + "</font></big></b>"));
+            taskName.setText(szTaskName);
+            dateChosen.setText(mdy.format(lDueDate));
+            taskNotes.setText(szTaskNotes);
+
+            builder.setView(rootView)
+                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            iPriority = prioritySlider.getValue();
+                            //iDueDate is automatically updated on dialog return
+                            szProjectName = sp_project.getSelectedItem().toString();
+                            szTaskName = taskName.getText().toString();
+                            szTaskNotes = taskNotes.getText().toString();
+
+                            //Instantiate the database to put information into it
+                            TaskDbHelper mDbHelper = new TaskDbHelper(rootView.getContext());
+                            SQLiteDatabase dbTask = mDbHelper.getReadableDatabase();
+
+                            //Map the values you want to put in
+                            ContentValues values = new ContentValues();
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_PROJECT, szProjectName);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_TITLE, szTaskName);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_DESC, szTaskNotes);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_PRIORITY, iPriority);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_DUEDATE, lDueDate);
+                            values.put(TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT, 0);
+                            String selection = TaskContract.TaskEntry._ID + " LIKE ?";
+                            String [] selectionArgs = {String.valueOf(iID)};
+                            dbTask.update(TaskContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
+
+                            //Call HomeList activity to refresh the list
+                            //Test this buy creating a project, adding a task and executing Bubble It!
+                            //If the project has been refreshed then bubbles appear
+                            ((HomeList) getActivity()).refreshProjectTasks();
+
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    });
+        }
+        else{
+
+        }
+
         // Create the AlertDialog object and return it
         return builder.create();
 
@@ -153,7 +215,7 @@ public class NewTaskDialog extends DialogFragment{
         String szDate = mdy.format(date);
         MaterialEditText dateChosen = (MaterialEditText) rootView.findViewById(R.id.dueDate);
         dateChosen.setText(szDate);
-        iDueDate = date;
+        lDueDate = date;
 
 
     }

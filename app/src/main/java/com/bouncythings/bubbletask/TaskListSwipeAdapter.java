@@ -1,10 +1,12 @@
 package com.bouncythings.bubbletask;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -47,13 +49,15 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
     public void fillValues(final int position, View convertView) {
 
         TaskBall currentTask = data.get(position);
-        String s_t_name = currentTask.getTaskName();
-        String s_t_desc = currentTask.getTaskDesc();
-        long l_t_deadline = currentTask.getDueDate();
-        Date date = new Date();
-        long currentDate = date.getTime();
-        long daysUntil = (l_t_deadline - currentDate) / (1000*60*60*24);
-        int completed_stat = currentTask.isCompleted(); //1 or 0 (complete/incomplete)
+        final Date date = new Date();
+        final String s_t_name = currentTask.getTaskName();
+        final String s_t_desc = currentTask.getTaskDesc();
+        final long l_t_deadline = currentTask.getDueDate();
+        final int i_t_priority = currentTask.getPriority();
+        final long currentDate = date.getTime();
+        final long daysUntil = (l_t_deadline - currentDate) / (1000*60*60*24);
+        final int completed_stat = currentTask.isCompleted(); //1 or 0 (complete/incomplete)
+        final int i_t_taskEntryId = currentTask.getTaskid();
 
 
         TextView tv_t_name = (TextView)convertView.findViewById(R.id.t_elem_name);
@@ -71,6 +75,21 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
             @Override
             public void onClick(View v) {
                 Log.d("Edit", "this: " + position);
+                DialogFragment dialog = new NewTaskDialog();
+                Bundle data = new Bundle();
+                data.putString("new_old", "edit");
+                data.putInt("current_project_index", HomeList.currentProjectIndex);
+                data.putStringArrayList("project_list", HomeList.projectList);
+                //Data to use in the newtaskdialog popup
+                data.putString("taskname", s_t_name);
+                data.putString("taskdesc", s_t_desc);
+                data.putLong("deadline", l_t_deadline);
+                data.putInt("priority", i_t_priority);
+                data.putInt("dbentryid", i_t_taskEntryId);
+
+
+                dialog.setArguments(data);
+                dialog.show(((HomeList)mContext).getFragmentManager(), "NewTaskDialog");
 
             }
         });
@@ -153,8 +172,7 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         tv_t_desc.setText(s_t_desc);
 
 
-        int priority = currentTask.getPriority();
-        switch (priority){
+        switch (i_t_priority){
             case 1: iv_t_bars.setImageResource(R.drawable.b1);
                 break;
             case 2: iv_t_bars.setImageResource(R.drawable.b2);
