@@ -407,7 +407,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
                 //Select everything in the database where the project name matches the current focused page
 
-                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," + TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " DESC";
+                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," + TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
                 String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
 
                 for (int index = 0; index < projectList.size(); index++) {
@@ -503,7 +503,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                     TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
             };
 
-            String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+            String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," + TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
             String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
 
             String currentItemString = projectList.get(currentProjectIndex);
