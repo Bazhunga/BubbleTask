@@ -243,6 +243,18 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 .setMessage("Are you sure you want to delete this project? All your tasks will be lost")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        //Remove the tasks from the database
+                        TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
+                        SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
+                        ArrayList<TaskBall> taskball_list = taskball_manager.getProject_TaskBallList(currentProjectIndex);
+
+                        for (int i = 0; i < taskball_list.size(); i++){
+                            int id = taskball_list.get(i).getTaskid();
+                            String selection = TaskContract.TaskEntry._ID + " LIKE ?";
+                            String[] selectionArgs = {String.valueOf(id)};
+                            dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+                        }
+                        
                         //Reset the projectList and populate it again
                         projectList.remove(currentProjectIndex);
                         //Remove the project from the static project_list
@@ -278,13 +290,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         }
                         lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
                         lvTasks.setAdapter(lvTasksAdapter);
-//                        lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//                            @Override
-//                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                                ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
-//                                Log.d("Position: ", "is " + position);
-//                            }
-//                        });
+
                         mDrawerAdapter.notifyDataSetChanged();
 
                     }
@@ -297,37 +303,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
-
-//    //TODO: Edit Task
-//    /*
-//    Task is marked as need to edit
-//    Launch the new task fragment and auto fill the information of the taskball
-//     */
-//    public void editTask(View view){
-//        Log.d("Edit", "Text");
-//    }
-//
-//    //TODO: Scrap Task
-//    /*
-//    Task is marked as not needed.
-//    Delete this from the database
-//    Call the database again to refresh the project tasks
-//     */
-//    public void deleteTask(View view){
-////        TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
-////        SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
-////        String taskName = taskball_manager.getTaskBall(currentProjectIndex, )
-////        dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry.COLUMN_TASK_TITLE + "=" + )
-//        Log.d("Delete", "Task");
-//
-//    }
-//
-//    //TODO: Check something off
-//    /*
-//    The task is marked as complete, the flag in database marking completion is checked.
-//    Remove the task from the view
-//    Call the database again to refresh the project tasks
-//     */
 
     public void markAsComplete(View view){
         Log.d("Mark", "As Complete");
@@ -398,13 +373,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             //it listens to the new projectg
             lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
             lvTasks.setAdapter(lvTasksAdapter);
-//            lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
-//                    Log.d("Position: ", "is " + position);
-//                }
-//            });
+
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             mDrawerAdapter.notifyDataSetChanged();
             setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
@@ -503,13 +472,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             }
             lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
             lvTasks.setAdapter(lvTasksAdapter);
-//            (new AdapterView.OnItemClickListener(){
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                    ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
-//                    Log.d("Position: ", "is " + position);
-//                }
-//            });
+
             mDrawerList.setDividerHeight(1);
             ColorDrawable div_color = new ColorDrawable(ctxt.getResources().getColor(R.color.black));
             mDrawerList.setDivider(div_color);
