@@ -52,7 +52,13 @@ public class Homelist_Drawer_Adapter extends BaseAdapter {
         }
         TextView tvProjectName = (TextView) convertView.findViewById(R.id.homelist_drawer_element_projectname);
 
-        String szProjectName = data.get(position).substring(0,1).toUpperCase() + data.get(position).substring(1);
+        String szProjectName = "";
+        if(data.get(position).length() > 1){
+            szProjectName = data.get(position).substring(0,1).toUpperCase() + data.get(position).substring(1);
+        }
+        else{
+            szProjectName = data.get(position).substring(0,1).toUpperCase();
+        }
 
         tvProjectName.setText(szProjectName);
         return convertView;

@@ -50,10 +50,16 @@ public class NewTaskDialog extends DialogFragment{
         int index = getArguments().getInt("current_project_index");
         final Spinner sp_project = (Spinner) rootView.findViewById(R.id.project_parent);
         ArrayList<String> projectList = getArguments().getStringArrayList("project_list");
+        //projectList.remove(projectList.size()-1); //Removes master list as being one of the project options
         ArrayAdapter<String> sp_project_adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, projectList);
         sp_project_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_project.setAdapter(sp_project_adapter);
-        sp_project.setSelection(index);
+//        if (index == (projectList.size())){
+//            sp_project.setSelection(index-1); //Makes sure current selection is not on master list
+//        }
+//        else{
+            sp_project.setSelection(index);
+        //}
 
         //Layout Elements
         final MaterialEditText taskName = (MaterialEditText) rootView.findViewById(R.id.task_entry);
@@ -96,6 +102,7 @@ public class NewTaskDialog extends DialogFragment{
             lDueDate = System.currentTimeMillis();
             szTaskName = "";
             szProjectName = sp_project.getSelectedItem().toString();
+
 
             //Must declare the view so that the buttons can be accessed (like the priority slider)
             tv_priority.setText(Html.fromHtml("Priority: " + "<b><big> <font color='#c700ff'>1</font></big></b>"));
@@ -153,7 +160,7 @@ public class NewTaskDialog extends DialogFragment{
         else if (new_old_creation.equals("edit")){
             //Variable initialization
             szTaskName = getArguments().getString("taskname");
-            szProjectName = sp_project.getSelectedItem().toString(); //Unused
+            szProjectName = getArguments().getString("project"); //Unused
             lDueDate = getArguments().getLong("deadline");
             iPriority = getArguments().getInt("priority");
             szTaskNotes = getArguments().getString("taskdesc");

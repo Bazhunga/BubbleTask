@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -34,23 +35,31 @@ public class NewProjectDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int id) {
                         MaterialEditText met = (MaterialEditText) v.findViewById(R.id.project_edit_text);
                         String projectName = met.getText().toString();
-                        try{
-                            ja = new JSONArray(projectList_prefs);
-                            JSONObject newProject = new JSONObject();
-                            newProject.put("project", projectName);
-                            ja.put(newProject);
-                        }catch(JSONException e){
-                            e.printStackTrace();
+                        if (projectName.length() >= 1) {
+                            try {
+                                ja = new JSONArray(projectList_prefs);
+                                JSONObject newProject = new JSONObject();
+                                newProject.put("project", projectName);
+                                ja.put(newProject);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString(getString(R.string.project_list_prefs), ja.toString());
+                            editor.commit();
+                            taskball_manager.addProject_TaskBallList(projectName);
+
+
+                            //Listen for the affirmation and pass that back to the activity
+                            NewProjectDialogListener listener = (NewProjectDialogListener) getActivity();
+                            listener.onReturnValue(true);
+                        } else {
+                            CharSequence msg = "Give your project a name!";
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast toast = Toast.makeText(v.getContext(), msg, duration);
+                            toast.show();
                         }
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString(getString(R.string.project_list_prefs), ja.toString());
-                        editor.commit();
-                        taskball_manager.addProject_TaskBallList(projectName);
 
-
-                        //Listen for the affirmation and pass that back to the activity
-                        NewProjectDialogListener listener = (NewProjectDialogListener) getActivity();
-                        listener.onReturnValue(true);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

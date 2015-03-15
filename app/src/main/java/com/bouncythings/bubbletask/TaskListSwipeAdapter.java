@@ -52,6 +52,7 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         final Date date = new Date();
         final String s_t_name = currentTask.getTaskName();
         final String s_t_desc = currentTask.getTaskDesc();
+        final String s_t_project = currentTask.getParentProject();
         final long l_t_deadline = currentTask.getDueDate();
         final int i_t_priority = currentTask.getPriority();
         final long currentDate = date.getTime();
@@ -82,6 +83,7 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
                 data.putStringArrayList("project_list", HomeList.projectList);
                 //Data to use in the newtaskdialog popup
                 data.putString("taskname", s_t_name);
+                data.putString("project", s_t_project);
                 data.putString("taskdesc", s_t_desc);
                 data.putLong("deadline", l_t_deadline);
                 data.putInt("priority", i_t_priority);
