@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -48,18 +49,20 @@ public class NewTaskDialog extends DialogFragment{
 
         //Setting up the spinner for the project
         int index = getArguments().getInt("current_project_index");
+
+        Log.d("Projectlist size", "" + HomeList.projectList.size());
+        if (HomeList.projectList.get(index).equals(getResources().getString(R.string.master_list))){
+            //currentIndex = index - 1;
+        }
+
         final Spinner sp_project = (Spinner) rootView.findViewById(R.id.project_parent);
         ArrayList<String> projectList = getArguments().getStringArrayList("project_list");
-        //projectList.remove(projectList.size()-1); //Removes master list as being one of the project options
+        projectList.remove(getResources().getString(R.string.master_list)); //Removes master list as being one of the project options
         ArrayAdapter<String> sp_project_adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, projectList);
         sp_project_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_project.setAdapter(sp_project_adapter);
-//        if (index == (projectList.size())){
-//            sp_project.setSelection(index-1); //Makes sure current selection is not on master list
-//        }
-//        else{
-            sp_project.setSelection(index);
-        //}
+
+        sp_project.setSelection(index);
 
         //Layout Elements
         final MaterialEditText taskName = (MaterialEditText) rootView.findViewById(R.id.task_entry);
