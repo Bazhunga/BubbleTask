@@ -87,22 +87,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
         //Get all project names
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
-        String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
-        JSONArray jsonArray;
-        projectList.clear();
-
-        try{
-            jsonArray = new JSONArray(project);
-            for (int i = 0; i < jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String projectString = jsonObject.getString("project");
-                projectList.add(projectString);
-            }
-
-
-        } catch (JSONException e){
-            e.printStackTrace();
-        }
+        updateProjectList();
 
         currentProjectIndex = 0;
         if (projectList != null && projectList.size() > 0){
@@ -272,72 +257,80 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     }
 
     public void deleteProject(View view){
-        //TODO: YOU NEED TO DELETE ALL THIS FROM THE DATABASE AS WELL!!
 
-        new AlertDialog.Builder(ctxt)
-                .setTitle("Delete Project")
-                .setMessage("Are you sure you want to delete this project? All your tasks will be lost")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Remove the tasks from the database
-                        TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
-                        SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
-                        ArrayList<TaskBall> taskball_list = taskball_manager.getProject_TaskBallList(currentProjectIndex);
+        //Only execute deletion if the currentProject name is not "Master List"
+        if (!projectList.get(currentProjectIndex).equals(getResources().getString(R.string.master_list))){
+            new AlertDialog.Builder(ctxt)
+                    .setTitle("Delete Project")
+                    .setMessage("Are you sure you want to delete this project? All your tasks will be lost")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //Remove the tasks from the database
+                            TaskDbHelper dbHelper = new TaskDbHelper(ctxt);
+                            SQLiteDatabase dbTask = dbHelper.getWritableDatabase();
+                            ArrayList<TaskBall> taskball_list = taskball_manager.getProject_TaskBallList(currentProjectIndex);
 
-                        for (int i = 0; i < taskball_list.size(); i++){
-                            int id = taskball_list.get(i).getTaskid();
-                            String selection = TaskContract.TaskEntry._ID + " LIKE ?";
-                            String[] selectionArgs = {String.valueOf(id)};
-                            dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+                            for (int i = 0; i < taskball_list.size(); i++){
+                                int id = taskball_list.get(i).getTaskid();
+                                String selection = TaskContract.TaskEntry._ID + " LIKE ?";
+                                String[] selectionArgs = {String.valueOf(id)};
+                                dbTask.delete(TaskContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+                            }
+
+                            //Reset the projectList and populate it again
+                            projectList.remove(currentProjectIndex);
+                            //Remove the project from the static project_list
+                            taskball_manager.removeProject_TaskBallList(currentProjectIndex);
+
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+                            String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
+                            JSONArray jsonArray;
+
+                            try{
+                                jsonArray = new JSONArray(project);
+                                jsonArray.remove(currentProjectIndex);
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(getString(R.string.project_list_prefs), jsonArray.toString());
+                                editor.commit();
+                            } catch (JSONException e){
+                                e.printStackTrace();
+                            }
+                            if (currentProjectIndex >= projectList.size() && projectList.size() != 0) {
+                                //Case of deleting the last element
+                                currentProjectIndex--;
+                                taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                                setTitle(projectList.get(currentProjectIndex));
+                            }
+                            else if (projectList.size() == 0){
+                                currentProjectIndex = 0;
+                                taskBallList = new ArrayList<>();
+                                setTitle("");
+                            }
+                            else{
+                                taskBallList = taskball_manager.getListList().get(currentProjectIndex);
+                                setTitle(projectList.get(currentProjectIndex));
+                            }
+                            lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
+                            lvTasks.setAdapter(lvTasksAdapter);
+
+                            mDrawerAdapter.notifyDataSetChanged();
+
                         }
-
-                        //Reset the projectList and populate it again
-                        projectList.remove(currentProjectIndex);
-                        //Remove the project from the static project_list
-                        taskball_manager.removeProject_TaskBallList(currentProjectIndex);
-
-                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
-                        String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
-                        JSONArray jsonArray;
-
-                        try{
-                            jsonArray = new JSONArray(project);
-                            jsonArray.remove(currentProjectIndex);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString(getString(R.string.project_list_prefs), jsonArray.toString());
-                            editor.commit();
-                        } catch (JSONException e){
-                            e.printStackTrace();
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
                         }
-                        if (currentProjectIndex >= projectList.size() && projectList.size() != 0) {
-                            //Case of deleting the last element
-                            currentProjectIndex--;
-                            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
-                            setTitle(projectList.get(currentProjectIndex));
-                        }
-                        else if (projectList.size() == 0){
-                            currentProjectIndex = 0;
-                            taskBallList = new ArrayList<>();
-                            setTitle("");
-                        }
-                        else{
-                            taskBallList = taskball_manager.getListList().get(currentProjectIndex);
-                            setTitle(projectList.get(currentProjectIndex));
-                        }
-                        lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
-                        lvTasks.setAdapter(lvTasksAdapter);
-
-                        mDrawerAdapter.notifyDataSetChanged();
-
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+        else{
+            CharSequence msg = "Master list cannot be removed";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(ctxt, msg, duration);
+            toast.show();
+        }
     }
 
     public void markAsComplete(View view){
@@ -373,6 +366,24 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         }
     }
 
+    public void updateProjectList(){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+        String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
+        JSONArray jsonArray = new JSONArray();
+        try {
+            projectList.clear();
+            jsonArray = new JSONArray(project);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String projectString = jsonObject.getString("project");
+                projectList.add(projectString);
+            }
+            projectList.add("Master List"); //Contains all the tasks
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         getSupportActionBar().setTitle(title);
@@ -381,35 +392,18 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     @Override
     public void onReturnValue(boolean projectCreated){
         if (projectCreated) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
-            String project = prefs.getString(getString(R.string.project_list_prefs), "[{'project':'Misc'}]");
-            JSONArray jsonArray = new JSONArray();
-
-            try {
-                projectList.clear();
-                jsonArray = new JSONArray(project);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    String projectString = jsonObject.getString("project");
-                    projectList.add(projectString);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            updateProjectList();
+            //Because we tack on a master list at the end of the project list we have to refresh
+            //the database to fix the changing of master list project index
+            new LoadDatabaseTasks_complete().execute();
+            setTitle(projectList.get(currentProjectIndex));
             mDrawerAdapter.notifyDataSetChanged();
             if (projectList.size() == 1) {
                 //Freshly created
-                setTitle(projectList.get(currentProjectIndex));
                 taskBallList = taskball_manager.getListList().get(currentProjectIndex);
                 lvTasksAdapter = new TaskListSwipeAdapter(ctxt, taskBallList);
                 lvTasks.setAdapter(lvTasksAdapter);
-//                lvTasks.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        ((SwipeLayout)(lvTasks.getChildAt(position - lvTasks.getFirstVisiblePosition()))).open(true);
-//                        Log.d("Position: ", "is " + position);
-//                    }
-//                });
+
                 mDrawerAdapter.notifyDataSetChanged();
             }
         }
@@ -464,11 +458,24 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 //                        TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC";
                 //Sort Order has been moved to being global. User can choose the type of sort order.
 
-                String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+                String selection; //= TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
 
                 for (int index = 0; index < projectList.size(); index++) {
                     String currentItemString = projectList.get(index);
-                    String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+
+                    String[] selectionArgs;
+
+                    if (currentItemString.equals(getResources().getString(R.string.master_list))){
+                        selection = null;
+                        String[] temp_selectionArgs = null; //{currentItemString};
+                        selectionArgs = temp_selectionArgs;
+                    }
+                    else{
+                        selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+                        String[] temp_selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+                        selectionArgs = temp_selectionArgs;
+                    }
+
 
                     tb_manager.addProject_TaskBallList(currentItemString);
 
@@ -559,10 +566,20 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                     TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
             };
 
-
-            String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
             String currentItemString = projectList.get(currentProjectIndex);
-            String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+            String selection;
+            String[] selectionArgs;
+
+            if (currentItemString.equals(getResources().getString(R.string.master_list))){
+                selection = null;
+                String[] temp_selectionArgs = null; //{currentItemString};
+                selectionArgs = temp_selectionArgs;
+            }
+            else{
+                selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+                String[] temp_selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
+                selectionArgs = temp_selectionArgs;
+            }
 
             tb_manager.addProject_TaskBallList(currentItemString);
 

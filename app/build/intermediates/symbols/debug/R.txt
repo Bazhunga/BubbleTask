@@ -742,8 +742,9 @@ int string done 0x7f0a0015
 int string drawer_close 0x7f0a0016
 int string drawer_open 0x7f0a0017
 int string hello_blank_fragment 0x7f0a0018
-int string project_list_prefs 0x7f0a0019
-int string title_activity_animated__bubbles 0x7f0a001a
+int string master_list 0x7f0a0019
+int string project_list_prefs 0x7f0a001a
+int string title_activity_animated__bubbles 0x7f0a001b
 int style ActionBar 0x7f0b0000
 int style AppTheme 0x7f0b0001
 int style AppTheme_DrawerArrowToggle 0x7f0b0002

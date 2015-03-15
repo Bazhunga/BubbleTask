@@ -2292,8 +2292,9 @@ containing a value of this type.
         public static final int drawer_close=0x7f0a0016;
         public static final int drawer_open=0x7f0a0017;
         public static final int hello_blank_fragment=0x7f0a0018;
-        public static final int project_list_prefs=0x7f0a0019;
-        public static final int title_activity_animated__bubbles=0x7f0a001a;
+        public static final int master_list=0x7f0a0019;
+        public static final int project_list_prefs=0x7f0a001a;
+        public static final int title_activity_animated__bubbles=0x7f0a001b;
     }
     public static final class style {
         public static final int ActionBar=0x7f0b0000;
