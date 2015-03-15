@@ -44,6 +44,8 @@ public class NewTaskDialog extends DialogFragment{
         rootView = inflater.inflate(R.layout.new_task_dialog, null);
         final TextView tv_priority = (TextView) rootView.findViewById(R.id.tv_priority);
 
+
+
         //Setting up the spinner for the project
         int index = getArguments().getInt("current_project_index");
         final Spinner sp_project = (Spinner) rootView.findViewById(R.id.project_parent);

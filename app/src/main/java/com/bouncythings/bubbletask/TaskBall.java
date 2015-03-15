@@ -3,6 +3,7 @@ package com.bouncythings.bubbletask;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -159,21 +160,6 @@ public class TaskBall { //implements Parcelable{
         this.tbOverlaps.remove(overlap);
     }
 
-
-//    public int getOverlaps() {
-//        return overlaps;
-//    }
-//
-//    public void incOverlaps() {
-//        this.overlaps++;
-//    }
-//    public void decOverlaps() {
-//        this.overlaps--;
-//    }
-//    private void setOverlaps(int overlaps){
-//        this.overlaps = overlaps;
-//    }
-
     private void setMass(){
         mass = priority * 80;
     }
@@ -200,9 +186,12 @@ public class TaskBall { //implements Parcelable{
         yVelocity = 25/priority * direction;
     }
     private void setCoords(){
+        SecureRandom rdmgen = new SecureRandom();
+
+        int random = rdmgen.nextInt(11) + 1;
         //Generate random x coordinate on screen
-        leftX = HomeList.maxWidth/2;
-        topY = HomeList.maxHeight/2;
+        leftX = HomeList.maxWidth/random;
+        topY = HomeList.maxHeight/random;
         rightX = leftX + 2 * radius;
         bottomY = topY + 2 * radius;
         findCentre();
