@@ -2185,6 +2185,9 @@ containing a value of this type.
         public static final int showTitle=0x7f080013;
         public static final int sliderText=0x7f080070;
         public static final int snackbar=0x7f080075;
+        public static final int sort_bydate=0x7f080086;
+        public static final int sort_byname=0x7f080088;
+        public static final int sort_bypriority=0x7f080087;
         public static final int split_action_bar=0x7f080009;
         public static final int submit_area=0x7f080045;
         public static final int surface_view=0x7f08007e;

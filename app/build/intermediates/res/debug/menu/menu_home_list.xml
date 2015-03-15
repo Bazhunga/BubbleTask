@@ -5,6 +5,12 @@
         android:orderInCategory="100" app:showAsAction="never" />
     <item android:id="@+id/clear_data" android:title="Clear Data"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/sort_bydate" android:title="Sort by date"
+        android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:id="@+id/sort_bypriority" android:title="Sort by priority"
+        android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:id="@+id/sort_byname" android:title="Sort by name"
+        android:orderInCategory="100" app:showAsAction="never"/>
 
 </menu>
 <!-- From: file:/home/kevin/PersonalProjects/BubbleTask/app/src/main/res/menu/menu_home_list.xml -->

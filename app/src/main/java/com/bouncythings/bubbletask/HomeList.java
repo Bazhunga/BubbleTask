@@ -65,6 +65,15 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     //For Editing and Deleting of Tasks
     private int mDownPosition;
 
+    //Sort Order
+
+    //Sorting order of the resulting cursor.
+    //Originally to be sorted by the duedate, since that's the largest influence on urgency
+    //Select everything in the database where the project name matches the current focused page
+    String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
+            TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," +
+            TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +108,16 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         if (projectList != null && projectList.size() > 0){
             setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
         }
+
+        //Get the sort order the user has chosen previously
+        //Possible choices
+        //  by_duedate (default)
+        //  by_priority
+        //  by_name
+        String sortOrderName = prefs.getString("Sort_Order", "by_duedate");
+
+        setSortOrder(sortOrderName);
+
 
         //Getting Display size data
         Display display = getWindowManager().getDefaultDisplay();
@@ -152,18 +171,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-//        //Setup swipe button listeners
-//        SwipeLayout sl_task_element = (SwipeLayout)findViewById(R.id.swipe_element);
-//        sl_task_element.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                mDownPosition = lvTasks.getPositionForView(v);
-//                Log.d("POSITION", "is " + mDownPosition);
-//                return false;
-//            }
-//        });
-
-
     }
 
     @Override
@@ -197,10 +204,10 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                 mDrawerLayout.openDrawer(mDrawerList);
             }
         }
-        if (id == R.id.action_settings) {
+        else if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.clear_data){
+        else if (id == R.id.clear_data){
             //Drop the database
             //Instantiate the database to put information into it
             TaskDbHelper mDbHelper = new TaskDbHelper(this);
@@ -209,6 +216,33 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             mDbHelper.createDatabase(dbTask);
             new LoadDatabaseTasks_complete().execute();
         }
+        else {
+            if (id == R.id.sort_bydate){
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("Sort_Order", "by_duedate");
+                editor.commit();
+                setSortOrder("by_duedate");
+            }
+            if (id == R.id.sort_bypriority){
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("Sort_Order", "by_priority");
+                editor.commit();
+                setSortOrder("by_priority");
+            }
+            if (id == R.id.sort_byname){
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctxt);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("Sort_Order", "by_name");
+                editor.commit();
+                setSortOrder("by_name");
+            }
+
+            refreshProjectTasks();
+        }
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -320,6 +354,25 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
     }
 
+    public void setSortOrder(String sortOrderName){
+        if (sortOrderName.equals("by_duedate")){
+            sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC";
+        }
+        else if (sortOrderName.equals("by_priority")){
+            sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+        }
+        else if (sortOrderName.equals("by_name")){
+            sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_TITLE + " DESC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC," +
+                    TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC";
+        }
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         getSupportActionBar().setTitle(title);
@@ -404,13 +457,13 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                         TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
                 };
 
-                //Sorting order of the resulting cursor.
-                //I want the entries to be sorted by the duedate, since that's the largest influence on urgency
-                //Select everything in the database where the project name matches the current focused page
 
-                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
-                        TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," +
-                        TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC";
+
+//                String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
+//                        TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," +
+//                        TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC";
+                //Sort Order has been moved to being global. User can choose the type of sort order.
+
                 String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
 
                 for (int index = 0; index < projectList.size(); index++) {
@@ -506,9 +559,8 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
                     TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT
             };
 
-            String sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
-                    TaskContract.TaskEntry.COLUMN_TASK_DUEDATE + " DESC," +
-                    TaskContract.TaskEntry.COLUMN_TASK_PRIORITY + " DESC";            String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
+
+            String selection = TaskContract.TaskEntry.COLUMN_TASK_PROJECT + "=?";
             String currentItemString = projectList.get(currentProjectIndex);
             String[] selectionArgs = {currentItemString}; //CURRENT PROJECT, update this later to ONLY INCOMPLETE ITEMS
 
