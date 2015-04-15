@@ -3,7 +3,6 @@ package com.bouncythings.bubbletask;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -186,12 +185,12 @@ public class TaskBall { //implements Parcelable{
         yVelocity = 25/priority * direction;
     }
     private void setCoords(){
-        SecureRandom rdmgen = new SecureRandom();
-
-        int random = rdmgen.nextInt(11) + 1;
+//        SecureRandom rdmgen = new SecureRandom();
+//
+//        int random = rdmgen.nextInt(11) + 1;
         //Generate random x coordinate on screen
-        leftX = HomeList.maxWidth/random;
-        topY = HomeList.maxHeight/random;
+        leftX = HomeList.maxWidth/2; //random;
+        topY = HomeList.maxHeight/2; //random;
         rightX = leftX + 2 * radius;
         bottomY = topY + 2 * radius;
         findCentre();

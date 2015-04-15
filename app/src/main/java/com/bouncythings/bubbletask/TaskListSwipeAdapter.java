@@ -159,6 +159,16 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
             tv_t_duedate.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
         }
         else{
+            /*
+            NTS: List view recycles views, so if you don't reset ll_element background to white as
+            well as make other elements visible, they will stay GONE and green.
+             */
+            ll_element.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            iv_t_bars.setVisibility(View.VISIBLE);
+            tv_t_desc.setVisibility(View.VISIBLE);
+            tv_t_name.setTextSize(TypedValue.COMPLEX_UNIT_DIP,16);
+            tv_t_duedate.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+
             if (daysUntil > 0){
                 tv_t_duedate.setText(Math.abs(daysUntil) + " days");
             }
