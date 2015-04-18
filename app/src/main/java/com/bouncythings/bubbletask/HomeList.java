@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.ikimuhendis.ldrawer.ActionBarDrawerToggle;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 
@@ -61,9 +62,6 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
     //HomeList to do tasks listview setup
     private ListView lvTasks;
     TaskListSwipeAdapter lvTasksAdapter;
-
-    //For Editing and Deleting of Tasks
-    private int mDownPosition;
 
     //Sort Order
 
@@ -131,6 +129,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         mDrawerList.setDivider(div_color);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
 
         mDrawerArrow = new DrawerArrowDrawable(this){
             @Override
@@ -382,6 +381,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -426,6 +426,18 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             mDrawerLayout.closeDrawer(Gravity.LEFT);
             mDrawerAdapter.notifyDataSetChanged();
             setTitle(projectList.get(currentProjectIndex).substring(0, 1).toUpperCase() + projectList.get(currentProjectIndex).substring(1));
+            //We don't want to allow the user to add any new task to the master list. That wouldn't make any sense categorically
+            Log.d("What", projectList.get(currentProjectIndex));
+
+            FloatingActionButton fab_newTask = (FloatingActionButton) findViewById(R.id.NewTask);
+            if (projectList.get(currentProjectIndex).equals(getResources().getString(R.string.master_list))){
+                Log.d("What", "Task Button Removed");
+                fab_newTask.setVisibility(View.GONE);
+            }
+            else{
+                Log.d("What", "Task Button Restored");
+                fab_newTask.setVisibility(View.VISIBLE);
+            }
         }
     }
 
