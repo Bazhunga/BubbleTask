@@ -45,20 +45,22 @@ public class NewTaskDialog extends DialogFragment{
         rootView = inflater.inflate(R.layout.new_task_dialog, null);
         final TextView tv_priority = (TextView) rootView.findViewById(R.id.tv_priority);
 
-
-
         //Setting up the spinner for the project
         int index = getArguments().getInt("current_project_index");
 
         Log.d("Projectlist size", "" + HomeList.projectList.size());
-        if (HomeList.projectList.get(index).equals(getResources().getString(R.string.master_list))){
-            //currentIndex = index - 1;
-        }
 
         final Spinner sp_project = (Spinner) rootView.findViewById(R.id.project_parent);
-        ArrayList<String> projectList = getArguments().getStringArrayList("project_list");
-        projectList.remove(getResources().getString(R.string.master_list)); //Removes master list as being one of the project options
-        ArrayAdapter<String> sp_project_adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, projectList);
+        ArrayList<String> l_projectList = new ArrayList<>();
+
+        //NTS: The projectList in homelist was passed into bundle and extracted here
+        //     Any operation done on the arraylist here (ie. removing the master list), would
+        //     change the project list back in Homelist. So you need to create a new arraylist
+        //     and copy everything over so you create a completely new instance of the arraylist
+        //     that you can use.
+        l_projectList.addAll(getArguments().getStringArrayList("project_list"));
+        l_projectList.remove(getResources().getString(R.string.master_list)); //Removes master list as being one of the project options
+        ArrayAdapter<String> sp_project_adapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, l_projectList);
         sp_project_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_project.setAdapter(sp_project_adapter);
 

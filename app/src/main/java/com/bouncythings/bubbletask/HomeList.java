@@ -251,6 +251,7 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(ctxt, msg, duration);
         toast.show();
+
         DialogFragment dialog = new NewProjectDialog();
         dialog.show(getFragmentManager(), "NewProjectDialog");
 
