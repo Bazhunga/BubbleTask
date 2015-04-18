@@ -2081,6 +2081,7 @@ containing a value of this type.
         public static final int text_cursor_pink=0x7f02005d;
     }
     public static final class id {
+        public static final int ActionMenu=0x7f08004c;
         public static final int DeleteProj=0x7f08004e;
         public static final int NewProject=0x7f08004f;
         public static final int NewTask=0x7f080050;
@@ -2213,7 +2214,6 @@ containing a value of this type.
         public static final int tv_priority=0x7f080072;
         public static final int up=0x7f08000a;
         public static final int useLogo=0x7f080014;
-        public static final int view=0x7f08004c;
         public static final int viewColor=0x7f080055;
         public static final int withText=0x7f080021;
         public static final int wrap_content=0x7f080026;

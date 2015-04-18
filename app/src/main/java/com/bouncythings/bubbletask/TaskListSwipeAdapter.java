@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,7 +47,7 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
     }
 
     @Override
-    public void fillValues(final int position, View convertView) {
+    public void fillValues(final int position, final View convertView) {
 
         TaskBall currentTask = data.get(position);
         final Date date = new Date();
@@ -71,6 +72,19 @@ public class TaskListSwipeAdapter extends BaseSwipeAdapter{
         ImageView iv_done = (ImageView)convertView.findViewById(R.id.done);
         LinearLayout ll_element = (LinearLayout)convertView.findViewById(R.id.surface_view);
 
+
+        ll_element.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()){
+                    case MotionEvent.ACTION_DOWN: {
+                        Log.d("Collapse", "Button Menu");
+                        ((HomeList)mContext).collapseButtonMenu();
+                    }
+                }
+                return false;
+            }
+        });
         //Set Listeners
         iv_edit.setOnClickListener(new View.OnClickListener() {
             @Override

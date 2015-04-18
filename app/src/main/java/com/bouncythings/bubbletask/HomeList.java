@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.ikimuhendis.ldrawer.ActionBarDrawerToggle;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 
@@ -346,6 +347,11 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
 
     }
 
+    public void collapseButtonMenu(){
+        FloatingActionsMenu fam = (FloatingActionsMenu) findViewById(R.id.ActionMenu);
+        fam.collapse();
+    }
+
     public void setSortOrder(String sortOrderName){
         if (sortOrderName.equals("by_duedate")){
             sortOrder = TaskContract.TaskEntry.COLUMN_TASK_COMPLETE_STAT + " ASC," +
@@ -430,14 +436,18 @@ public class HomeList extends ActionBarActivity implements NewProjectDialog.NewP
             Log.d("What", projectList.get(currentProjectIndex));
 
             FloatingActionButton fab_newTask = (FloatingActionButton) findViewById(R.id.NewTask);
+            FloatingActionButton fab_deleteProj = (FloatingActionButton) findViewById(R.id.DeleteProj);
             if (projectList.get(currentProjectIndex).equals(getResources().getString(R.string.master_list))){
                 Log.d("What", "Task Button Removed");
                 fab_newTask.setVisibility(View.GONE);
+                fab_deleteProj.setVisibility(View.GONE);
             }
             else{
                 Log.d("What", "Task Button Restored");
                 fab_newTask.setVisibility(View.VISIBLE);
+                fab_deleteProj.setVisibility(View.VISIBLE);
             }
+            collapseButtonMenu();
         }
     }
 

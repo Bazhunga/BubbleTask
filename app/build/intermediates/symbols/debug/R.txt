@@ -539,6 +539,7 @@ int drawable t 0x7f02005a
 int drawable task_name 0x7f02005b
 int drawable text_cursor 0x7f02005c
 int drawable text_cursor_pink 0x7f02005d
+int id ActionMenu 0x7f08004c
 int id DeleteProj 0x7f08004e
 int id NewProject 0x7f08004f
 int id NewTask 0x7f080050
@@ -671,7 +672,6 @@ int id trash 0x7f08007c
 int id tv_priority 0x7f080072
 int id up 0x7f08000a
 int id useLogo 0x7f080014
-int id view 0x7f08004c
 int id viewColor 0x7f080055
 int id withText 0x7f080021
 int id wrap_content 0x7f080026
